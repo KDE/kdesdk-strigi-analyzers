@@ -44,6 +44,6 @@ Name[zh_CN]=C++ 信息
 Name[zh_TW]=C++ 資訊
 ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_cpp
-MimeType=text/x-c++src
+MimeType=text/x-c++src;text/x-chdr
 PreferredGroups=General
 PreferredItems=Lines,Code,Comment,Blank,Strings,i18n Strings,Included Files
