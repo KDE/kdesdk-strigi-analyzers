@@ -67,7 +67,8 @@ void KCppPlugin::makeMimeTypeInfo(const QString& mimetype)
 bool KCppPlugin::readInfo( KFileMetaInfo& info, uint )
 {
     QFile f(info.path());
-    f.open(IO_ReadOnly);
+    if (!f.open(IO_ReadOnly))
+        return false;
 
     int codeLines     = 0;
     int commentLines  = 0;
