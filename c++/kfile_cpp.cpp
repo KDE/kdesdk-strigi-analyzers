@@ -58,9 +58,9 @@ void KCppPlugin::makeMimeTypeInfo(const QString& mimetype)
     setAttributes(item, KFileMimeTypeInfo::Averaged);
     item = addItemInfo(group, "Strings", i18n("Strings"), QVariant::Int);
     setAttributes(item, KFileMimeTypeInfo::Averaged);
-    item = addItemInfo(group, "i18n Strings", i18n("i18n Strings"), QVariant::Int);
+    item = addItemInfo(group, "i18n Strings", i18n("i18n strings"), QVariant::Int);
     setAttributes(item, KFileMimeTypeInfo::Averaged);
-    item = addItemInfo(group, "Included Files", i18n("Included Files"), QVariant::Int);
+    item = addItemInfo(group, "Included Files", i18n("Included files"), QVariant::Int);
     setAttributes(item, KFileMimeTypeInfo::Averaged);
 }
 
@@ -105,7 +105,7 @@ bool KCppPlugin::readInfo( KFileMetaInfo& info, uint )
             line.truncate(pos);
                 
             Strings+=line.contains(QRegExp("\".*\""));
-            Stringsi18n+=line.contains(QRegExp("i18n\\s*\\("));
+            Stringsi18n+=line.contains(QRegExp("(i18n|I18N_NOOP)\\s*\\("));
         }
         else
             commentLines++;
