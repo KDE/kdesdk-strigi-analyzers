@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=Service
 Name=C++ Info
 Name[af]=C++ Inligting
+Name[bg]=Изходен код на C++
 Name[ca]=Informació C++
 Name[cs]=C++ info
 Name[cy]=Gwybodaeth C++
@@ -19,6 +20,7 @@ Name[he]=מידע ++C
 Name[hi]=C++ इन्फो
 Name[hr]=C++ informacije
 Name[hu]=C++-jellemzők
+Name[is]=C++ upplýsingar
 Name[it]=Informazioni C++
 Name[ja]=C++ 情報
 Name[lt]=C++ Informacija
@@ -33,8 +35,9 @@ Name[ru]=Информация C++
 Name[sk]=Informácie o C++
 Name[sl]=Informacije o C++
 Name[sr]=C++ информације
+Name[sr@Latn]=C++ informacije
 Name[sv]=C++-information
-Name[ta]= =C/C++ தகவல் 
+Name[ta]= =C/C++ தகவல்
 Name[th]=ข้อมูล C++
 Name[tr]=C++ Bilgisi
 Name[uk]=Інформація про C++
