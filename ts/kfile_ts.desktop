@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=Text File Info
+ServiceTypes=KFilePlugin
+X-KDE-Library=kfile_ts
+MimeType=application/x-linguist
+PreferredGroups=General
+PreferredItems=Messages,Translated,Untranslated,Fuzzi

@@ -1,1 +1,1 @@
-SUBDIRS=diff c++
+SUBDIRS=diff c++ ts
