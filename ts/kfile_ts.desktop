@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=Qt Linguist File Info
+Name[ar]=معلومات ملف Qt Linguist
 Name[bs]=Qt Linguist informacije o datoteci
 Name[ca]=Informació fitxer de Qt Linguist
 Name[cs]=Info o souboru Qt Linguist
@@ -11,6 +12,7 @@ Name[de]=Qt Linguist-Dateiinfo
 Name[el]=Πληροφορίες αρχείου Qt Linguist
 Name[es]=Información de archivo de Qt Linguist
 Name[et]=Qt Linguisti faili info
+Name[eu]=Qt Linguist fitxategi informazioa
 Name[fi]=Qt Linquist tiedoston tiedot
 Name[fr]=Fichier d'informations Qt Linguist
 Name[hi]=क्यूटी लिंग्विस्ट फ़ाइल जानकारी
