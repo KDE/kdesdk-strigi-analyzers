@@ -2,7 +2,7 @@
 **                             kfile_diff.cpp
 **                              -------------------
 **      begin                   : Sun Jan 20 23:25:44 2002
-**      copyright               : (C) 2002 by Otto Bruggeman
+**      copyright               : (C) 2002-2003 by Otto Bruggeman
 **      email                   : otto.bruggeman@home.nl
 **
 ***************************************************************************/
@@ -22,7 +22,9 @@
 **
 ** Patched to work with CVS from after March 24, 2002 Otto
 **
-** Added support for perforce diffs, April 26, 2003 Otto Bruggeman
+** Added support for Perforce diffs, April 26, 2003 Otto Bruggeman
+**
+** Added support for Subversion diffs, September 11, 2003 Otto Bruggeman
 */
 
 #include <qcstring.h>
