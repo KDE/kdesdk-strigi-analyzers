@@ -105,7 +105,7 @@ bool KCppPlugin::readInfo( KFileMetaInfo& info, uint )
             line.truncate(pos);
                 
             Strings+=line.contains(QRegExp("\".*\""));
-            Stringsi18n+=line.contains(QRegExp("(i18n|I18N_NOOP)\\s*\\("));
+            Stringsi18n+=line.contains(QRegExp("(?:i18n|I18N_NOOP)\\s*\\("));
         }
         else
             commentLines++;
