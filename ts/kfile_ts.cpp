@@ -59,7 +59,6 @@ bool KTsPlugin::readInfo(KFileMetaInfo& info, uint)
         return false;
 
     int messages      = 0;
-    int translated    = 0;
     int untranslated  = 0;
     int obsolete      = 0;
     
