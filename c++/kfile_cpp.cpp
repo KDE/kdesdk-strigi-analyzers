@@ -82,9 +82,10 @@ bool KCppPlugin::readInfo( KFileMetaInfo& info, uint )
     
     QString line;
     
-    while (!f.atEnd())
+    QTextStream stream( &f );
+    while (!stream.eof())
     {
-        f.readLine(line, 1000);
+        line = stream.readLine();
         totalLines++;
 
         if (line.stripWhiteSpace().isEmpty())
