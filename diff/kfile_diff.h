@@ -34,8 +34,8 @@ public:
 	virtual bool readInfo( KFileMetaInfo& info, uint what );
 
 public:
-	enum Format      { Context, Ed, Normal, RCS, Unified, Empty, Unknown };
-	enum DiffProgram { CVSDiff, Diff, Diff3, Undeterminable }; // cant use Unknown again :(
+	enum Format      { Context, Ed, Normal, RCS, Unified, Empty, SideBySide, Unknown };
+	enum DiffProgram { CVSDiff, Diff, Diff3, Perforce, Undeterminable }; // cant use Unknown again :(
 
 private:
 	enum Format      determineDiffFormat   ( const QStringList lines ) const;

@@ -21,6 +21,8 @@
 ** Patched to work with CVS from after February 26, 2002 Otto
 **
 ** Patched to work with CVS from after March 24, 2002 Otto
+**
+** Added support for perforce diffs, April 26, 2003 Otto Bruggeman
 */
 
 #include <qcstring.h>
@@ -242,14 +244,17 @@ enum KDiffPlugin::DiffProgram KDiffPlugin::determineDiffProgram( const QStringLi
 
 	QStringList::ConstIterator it = lines.begin();
 	// very crude, might need some more refining
-	QRegExp typeRE( "^diff .*" );
+	QRegExp diffRE( "^diff .*" );
+	QRegExp p4sRE("^==== ");
 
 	while ( it != lines.end() )
 	{
 		if ( (*it).startsWith( "Index: " ) )
 			return KDiffPlugin::CVSDiff;
-		else if ( typeRE.exactMatch( *it ) )
+		else if ( diffRE.exactMatch( *it ) )
 			return KDiffPlugin::Diff;
+		else if ( p4sRE.exactMatch( *it ) )
+			return KDiffPlugin::Perforce;
 
 		++it;
 	}
@@ -283,6 +288,8 @@ const QString KDiffPlugin::determineI18nedFormat( enum KDiffPlugin::Format diffF
 	case KDiffPlugin::Unknown:
 		format = i18n( "Unknown" );
 		break;
+	case KDiffPlugin::SideBySide:
+		format = i18n( "Side by side" );
 	}
 	return format;
 }
@@ -302,6 +309,9 @@ const QString KDiffPlugin::determineI18nedProgram( enum KDiffPlugin::DiffProgram
 	case KDiffPlugin::Diff3:
 		program = i18n( "Diff3" );
 		break;
+	case KDiffPlugin::Perforce:
+		program = i18n( "Perforce" );
+		break;
 	case KDiffPlugin::Undeterminable:
 		program = i18n( "Unknown" );
 		break;
@@ -318,7 +328,7 @@ void KDiffPlugin::determineDiffInfo( const QStringList lines,
                                      int* numberOfDeletions )
 {
 	QString line;
-	
+
 	QRegExp edAdd( "([0-9]+)(|,([0-9]+))a" );
 	QRegExp edDel( "([0-9]+)(|,([0-9]+))d" );
 	QRegExp edMod( "([0-9]+)(|,([0-9]+))c" );
@@ -577,6 +587,7 @@ void KDiffPlugin::determineDiffInfo( const QStringList lines,
 		break;
 	case KDiffPlugin::Empty:
 	case KDiffPlugin::Unknown:
+	case KDiffPlugin::SideBySide:
 		break;
 	}
 }
