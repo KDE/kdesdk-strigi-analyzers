@@ -55,9 +55,9 @@ KDiffPlugin::KDiffPlugin(QObject *parent, const char *name,
 	KFileMimeTypeInfo::GroupInfo* group;
 	group = addGroupInfo( info, "General", i18n( "General" ) );
 	addItemInfo( group, "Files", i18n( "Files" ), QVariant::UInt );
-	addItemInfo( group, "First", i18n( "First file" ), QVariant::String );
+	addItemInfo( group, "First", i18n( "First File" ), QVariant::String );
 	addItemInfo( group, "Format", i18n( "Format" ), QVariant::String );
-	addItemInfo( group, "DiffProgram", i18n( "Diff program" ), QVariant::String );
+	addItemInfo( group, "DiffProgram", i18n( "Diff Program" ), QVariant::String );
 	addItemInfo( group, "Hunks", i18n( "Hunks" ), QVariant::UInt );
 	group = addGroupInfo( info, "Statistics", i18n( "Statistics" ) );
 	addItemInfo( group, "Insert", i18n( "Insertions" ), QVariant::UInt );
@@ -292,13 +292,13 @@ const QString KDiffPlugin::determineI18nedFormat( enum KDiffPlugin::Format diffF
 		format = i18n( "Unified" );
 		break;
 	case KDiffPlugin::Empty:
-		format = i18n( "Not available (file empty)" );
+		format = i18n( "Not Available (file empty)" );
 		break;
 	case KDiffPlugin::Unknown:
 		format = i18n( "Unknown" );
 		break;
 	case KDiffPlugin::SideBySide:
-		format = i18n( "Side by side" );
+		format = i18n( "Side by Side" );
 	}
 	return format;
 }
