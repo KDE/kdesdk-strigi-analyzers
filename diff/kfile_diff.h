@@ -35,7 +35,7 @@ public:
 
 public:
 	enum Format      { Context, Ed, Normal, RCS, Unified, Empty, SideBySide, Unknown };
-	enum DiffProgram { CVSDiff, Diff, Diff3, Perforce, Undeterminable }; // cant use Unknown again :(
+	enum DiffProgram { CVSDiff, Diff, Diff3, Perforce, SubVersion, Undeterminable }; // cant use Unknown again :(
 
 private:
 	enum Format      determineDiffFormat   ( const QStringList lines ) const;

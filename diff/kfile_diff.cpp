@@ -247,9 +247,13 @@ enum KDiffPlugin::DiffProgram KDiffPlugin::determineDiffProgram( const QStringLi
 	QRegExp diffRE( "^diff .*" );
 	QRegExp p4sRE("^==== ");
 
+	bool indexFound = false;
+
 	while ( it != lines.end() )
 	{
-		if ( (*it).startsWith( "Index: " ) )
+		if ( (*it).startsWith( "Index:" ) )
+			indexFound = true;
+		else if ( (*it).startsWith( "retrieving revision") )
 			return KDiffPlugin::CVSDiff;
 		else if ( diffRE.exactMatch( *it ) )
 			return KDiffPlugin::Diff;
@@ -258,6 +262,9 @@ enum KDiffPlugin::DiffProgram KDiffPlugin::determineDiffProgram( const QStringLi
 
 		++it;
 	}
+
+	if ( indexFound ) // but no "retrieving revision" found like only cvs diff adds.
+		return KDiffPlugin::SubVersion;
 
 	return KDiffPlugin::Undeterminable;
 }
@@ -311,6 +318,9 @@ const QString KDiffPlugin::determineI18nedProgram( enum KDiffPlugin::DiffProgram
 		break;
 	case KDiffPlugin::Perforce:
 		program = i18n( "Perforce" );
+		break;
+	case KDiffPlugin::SubVersion:
+		program = i18n( "SubVersion" );
 		break;
 	case KDiffPlugin::Undeterminable:
 		program = i18n( "Unknown" );
