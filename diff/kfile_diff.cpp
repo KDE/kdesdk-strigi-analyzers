@@ -50,15 +50,15 @@ KDiffPlugin::KDiffPlugin(QObject *parent, const char *name,
 
 	KFileMimeTypeInfo::GroupInfo* group;
 	group = addGroupInfo( info, "General", i18n( "General" ) );
-	addItemInfo( group, "Files", i18n( "No. Files" ), QVariant::UInt );
-	addItemInfo( group, "First", i18n( "First File" ), QVariant::String );
-	addItemInfo( group, "Format", i18n( "Diff Format" ), QVariant::String );
-	addItemInfo( group, "DiffProgram", i18n( "Used Diff Program" ), QVariant::String );
-	addItemInfo( group, "Hunks", i18n( "No. Hunks" ), QVariant::UInt );
-	group = addGroupInfo( info, "Modifications", i18n( "Modifications" ) );
-	addItemInfo( group, "Insert", i18n( "No. Insertions" ), QVariant::UInt );
-	addItemInfo( group, "Modify", i18n( "No. Changes" ),    QVariant::UInt );
-	addItemInfo( group, "Delete", i18n( "No. Deletions" ),  QVariant::UInt );
+	addItemInfo( group, "Files", i18n( "Files" ), QVariant::UInt );
+	addItemInfo( group, "First", i18n( "First file" ), QVariant::String );
+	addItemInfo( group, "Format", i18n( "Format" ), QVariant::String );
+	addItemInfo( group, "DiffProgram", i18n( "Diff program" ), QVariant::String );
+	addItemInfo( group, "Hunks", i18n( "Hunks" ), QVariant::UInt );
+	group = addGroupInfo( info, "Statistics", i18n( "Statistics" ) );
+	addItemInfo( group, "Insert", i18n( "Insertions" ), QVariant::UInt );
+	addItemInfo( group, "Modify", i18n( "Changes" ),    QVariant::UInt );
+	addItemInfo( group, "Delete", i18n( "Deletions" ),  QVariant::UInt );
 }
 
 bool KDiffPlugin::readInfo( KFileMetaInfo& info, uint what )
@@ -169,7 +169,7 @@ bool KDiffPlugin::readInfo( KFileMetaInfo& info, uint what )
 		dataSet = true;
 	}
 
-	group = appendGroup( info, "Modifications" );
+	group = appendGroup( info, "Statistics" );
 
 	if ( numberOfAdditions != 0 && what != KFileMetaInfo::Fastest )
 	{
