@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=C/C++ Header Info
+Name[de]=C/C++-Header-Info
+Name[xx]=xx
+ServiceTypes=KFilePlugin
+X-KDE-Library=kfile_cpp
+MimeType=text/x-chdr
+PreferredItems=Lines,Code,Comment,Blank,Strings,i18n Strings,Included Files
