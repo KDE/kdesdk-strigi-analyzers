@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Type=Service
-Name=Text File Info
+Name=Qt Linguist File Info
 ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_ts
 MimeType=application/x-linguist
