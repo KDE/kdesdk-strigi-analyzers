@@ -1,5 +1,6 @@
 [Desktop Entry]
 Type=Service
+Encoding=UTF-8
 Name=Diff Stats
 Name[af]=Diff Statistiek
 Name[bg]=Файл с разлики
@@ -35,6 +36,7 @@ Name[sr]=Diff статистика
 Name[sr@Latn]=Diff statistika
 Name[sv]=Diff-statistik
 Name[ta]=டிப் ஸ்டட்ஸ்
+Name[tg]=Статистикаи фарқият
 Name[th]=สถานะแตกต่าง
 Name[tr]=Diff İstatistikleri
 Name[xx]=xxDiff Statsxx
