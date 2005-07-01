@@ -24,6 +24,8 @@
 
 #include <qfile.h>
 #include <qstringlist.h>
+//Added by qt3to4:
+#include <QTextStream>
 
 typedef KGenericFactory<KTsPlugin> TsFactory;
 
@@ -55,7 +57,7 @@ void KTsPlugin::makeMimeTypeInfo(const QString& mimeType)
 bool KTsPlugin::readInfo(KFileMetaInfo& info, uint)
 {
     QFile f(info.path());
-    if (!f.open(IO_ReadOnly))
+    if (!f.open(QIODevice::ReadOnly))
         return false;
 
     int messages      = 0;

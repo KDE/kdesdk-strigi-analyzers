@@ -26,6 +26,8 @@
 
 #include <qfile.h>
 #include <qregexp.h>
+//Added by qt3to4:
+#include <QTextStream>
 
 typedef KGenericFactory<KCppPlugin> CppFactory;
 
@@ -67,7 +69,7 @@ void KCppPlugin::makeMimeTypeInfo(const QString& mimetype)
 bool KCppPlugin::readInfo( KFileMetaInfo& info, uint )
 {
     QFile f(info.path());
-    if (!f.open(IO_ReadOnly))
+    if (!f.open(QIODevice::ReadOnly))
         return false;
 
     int codeLines     = 0;
