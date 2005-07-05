@@ -83,7 +83,7 @@ bool KDiffPlugin::readInfo( KFileMetaInfo& info, uint what )
 	if( file.open( QIODevice::ReadOnly ) )
 	{
 		QTextStream stream( &file );
-		while (!stream.eof())
+		while (!stream.atEnd())
 		{
 			lines.append( stream.readLine() );
 		}

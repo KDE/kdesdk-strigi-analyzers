@@ -85,7 +85,7 @@ bool KCppPlugin::readInfo( KFileMetaInfo& info, uint )
     QString line;
     
     QTextStream stream( &f );
-    while (!stream.eof())
+    while (!stream.atEnd())
     {
         line = stream.readLine();
         totalLines++;
@@ -108,8 +108,8 @@ bool KCppPlugin::readInfo( KFileMetaInfo& info, uint )
             // truncate the comment - we don't want to count strings in it
             line.truncate(pos);
                 
-            Strings+=line.contains(QRegExp("\".*\""));
-            Stringsi18n+=line.contains(QRegExp("(?:i18n|I18N_NOOP)\\s*\\("));
+            Strings+=line.count(QRegExp("\".*\""));
+			Stringsi18n+=line.count(QRegExp("(?:i18n|I18N_NOOP)\\s*\\("));
         }
         else
             commentLines++;

@@ -67,7 +67,7 @@ bool KTsPlugin::readInfo(KFileMetaInfo& info, uint)
     QString line;
     
     QTextStream stream( &f );
-    while (!stream.eof())
+    while (!stream.atEnd())
     {
         line = stream.readLine();
 
