@@ -27,12 +27,14 @@
 ** Added support for Subversion diffs, September 11, 2003 Otto Bruggeman
 */
 
-#include <qcstring.h>
+#include <q3cstring.h>
 #include <qdatetime.h>
-#include <qdict.h>
+#include <q3dict.h>
 #include <qfile.h>
 #include <qregexp.h>
 #include <qvalidator.h>
+//Added by qt3to4:
+#include <QTextStream>
 
 #include <kdebug.h>
 #include <kgenericfactory.h>
@@ -78,10 +80,10 @@ bool KDiffPlugin::readInfo( KFileMetaInfo& info, uint what )
 	QFile file( info.path() );
 	QStringList lines;
 
-	if( file.open( IO_ReadOnly ) )
+	if( file.open( QIODevice::ReadOnly ) )
 	{
 		QTextStream stream( &file );
-		while (!stream.eof())
+		while (!stream.atEnd())
 		{
 			lines.append( stream.readLine() );
 		}
