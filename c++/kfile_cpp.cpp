@@ -90,7 +90,7 @@ bool KCppPlugin::readInfo( KFileMetaInfo& info, uint )
         line = stream.readLine();
         totalLines++;
 
-        if (line.stripWhiteSpace().isEmpty())
+        if (line.trimmed().isEmpty())
         {
             emptyLines++;
             continue;
