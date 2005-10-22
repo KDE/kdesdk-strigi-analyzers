@@ -48,7 +48,7 @@ K_EXPORT_COMPONENT_FACTORY(kfile_diff, KGenericFactory<KDiffPlugin>("kfile_diff"
 
 KDiffPlugin::KDiffPlugin(QObject *parent, const char *name,
                          const QStringList &preferredItems)
-	: KFilePlugin(parent, name, preferredItems)
+	: KFilePlugin(parent, preferredItems)
 {
 	kdDebug(7034) << "diff plugin" << endl;
 

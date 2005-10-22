@@ -35,7 +35,7 @@ K_EXPORT_COMPONENT_FACTORY(kfile_cpp, CppFactory("kfile_cpp"))
 
 KCppPlugin::KCppPlugin(QObject *parent, const char *name,
                        const QStringList &args)
-    : KFilePlugin(parent, name, args)
+    : KFilePlugin(parent, args)
 {
     kdDebug(7034) << "c++ plugin\n";
     makeMimeTypeInfo("text/x-c++src");
