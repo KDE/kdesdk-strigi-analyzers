@@ -50,7 +50,7 @@ KDiffPlugin::KDiffPlugin(QObject *parent, const char *name,
                          const QStringList &preferredItems)
 	: KFilePlugin(parent, preferredItems)
 {
-	kdDebug(7034) << "diff plugin" << endl;
+	kDebug(7034) << "diff plugin" << endl;
 
 	KFileMimeTypeInfo* info = addMimeTypeInfo( "text/x-diff" );
 
@@ -132,15 +132,15 @@ bool KDiffPlugin::readInfo( KFileMetaInfo& info, uint what )
 		++it;
 	}
 
-	kdDebug(7034) << "Diff Format         : " << format << endl; // i18n-ed but that is not a problem unless i get i18n-ed debug output ah well, we'll figure something out when then happens
+	kDebug(7034) << "Diff Format         : " << format << endl; // i18n-ed but that is not a problem unless i get i18n-ed debug output ah well, we'll figure something out when then happens
 
 	if (what != KFileMetaInfo::Fastest )
 	{
 		// These dont get calculated in fastest mode...
-		kdDebug(7034) << "Number of additions : " << numberOfAdditions << endl;
-		kdDebug(7034) << "Number of deletions : " << numberOfDeletions << endl;
-		kdDebug(7034) << "Number of changes   : " << numberOfChanges << endl;
-		kdDebug(7034) << "Number of hunks     : " << numberOfHunks << endl;
+		kDebug(7034) << "Number of additions : " << numberOfAdditions << endl;
+		kDebug(7034) << "Number of deletions : " << numberOfDeletions << endl;
+		kDebug(7034) << "Number of changes   : " << numberOfChanges << endl;
+		kDebug(7034) << "Number of hunks     : " << numberOfHunks << endl;
 	}
 
 	group = appendGroup( info, "General" );
@@ -364,36 +364,36 @@ void KDiffPlugin::determineDiffInfo( const QStringList lines,
 			if ( (*it).startsWith("***************") )
 			{
 				(*numberOfHunks)++;
-//				kdDebug(7034) << "Context Hunk      : " << (*it) << endl;
+//				kDebug(7034) << "Context Hunk      : " << (*it) << endl;
 			}
 			else if ( (*it).startsWith("***") )
 			{
 				(*numberOfFiles)++;
-//				kdDebug(7034) << "Context File      : " << (*it) << endl;
+//				kDebug(7034) << "Context File      : " << (*it) << endl;
 			}
 			else if ( (*it).startsWith("---") ) {} // ignore
 			else if ( (*it).startsWith("+") )
 			{
 				(*numberOfAdditions)++;
-//				kdDebug(7034) << "Context Insertion : " << (*it) << endl;
+//				kDebug(7034) << "Context Insertion : " << (*it) << endl;
 			}
 			else if ( (*it).startsWith("-") )
 			{
 				(*numberOfDeletions)++;
-//				kdDebug(7034) << "Context Deletion  : " << (*it) << endl;
+//				kDebug(7034) << "Context Deletion  : " << (*it) << endl;
 			}
 			else if ( (*it).startsWith("!") )
 			{
 				(*numberOfChanges)++;
-//				kdDebug(7034) << "Context Modified  : " << (*it) << endl;
+//				kDebug(7034) << "Context Modified  : " << (*it) << endl;
 			}
 			else if ( (*it).startsWith(" ") )
 			{
-//				kdDebug(7034) << "Context Context   : " << (*it) << endl;
+//				kDebug(7034) << "Context Context   : " << (*it) << endl;
 			}
 			else
 			{
-//				kdDebug(7034) << "Context Unknown   : " << (*it) << endl;
+//				kDebug(7034) << "Context Unknown   : " << (*it) << endl;
 			}
 
 			++it;
@@ -407,30 +407,30 @@ void KDiffPlugin::determineDiffInfo( const QStringList lines,
 			if ( (*it).startsWith( "diff" ) )
 			{
 				(*numberOfFiles)++;
-//				kdDebug(7034) << "Ed File         : " << (*it) << endl;
+//				kDebug(7034) << "Ed File         : " << (*it) << endl;
 			}
 			else if ( edAdd.exactMatch( (*it) ) )
 			{
-//				kdDebug(7034) << "Ed Insertion    : " << (*it) << endl;
+//				kDebug(7034) << "Ed Insertion    : " << (*it) << endl;
 				(*numberOfHunks)++;
 				++it;
 				while( it != lines.end() && !(*it).startsWith(".") )
 				{
 					(*numberOfAdditions)++;
-//					kdDebug(7034) << "Ed Insertion    : " << (*it) << endl;
+//					kDebug(7034) << "Ed Insertion    : " << (*it) << endl;
 					++it;
 				}
 			}
 			else if ( edDel.exactMatch( (*it) ) )
 			{
-//				kdDebug(7034) << "Ed Deletion     : " << (*it) << endl;
+//				kDebug(7034) << "Ed Deletion     : " << (*it) << endl;
 				(*numberOfHunks)++;
 				(*numberOfDeletions) += (edDel.cap(3).isEmpty() ? 1 : edDel.cap(3).toInt() - edDel.cap(1).toInt() + 1);
-//				kdDebug(7034) << "Ed noOfLines    : " << (edDel.cap(3).isEmpty() ? 1 : edDel.cap(3).toInt() - edDel.cap(1).toInt() + 1) << endl;
+//				kDebug(7034) << "Ed noOfLines    : " << (edDel.cap(3).isEmpty() ? 1 : edDel.cap(3).toInt() - edDel.cap(1).toInt() + 1) << endl;
 			}
 			else if ( edMod.exactMatch( (*it) ) )
 			{
-//				kdDebug(7034) << "Ed Modification : " << (*it) << endl;
+//				kDebug(7034) << "Ed Modification : " << (*it) << endl;
 				if ( edMod.cap(3).isEmpty() )
 					(*numberOfDeletions)++;
 				else
@@ -440,13 +440,13 @@ void KDiffPlugin::determineDiffInfo( const QStringList lines,
 				while( it != lines.end() && !(*it).startsWith(".") )
 				{
 					(*numberOfAdditions)++;
-//					kdDebug(7034) << "Ed Modification : " << (*it) << endl;
+//					kDebug(7034) << "Ed Modification : " << (*it) << endl;
 					++it;
 				}
 			}
 			else
 			{
-//				kdDebug(7034) << "Ed Unknown      : " << (*it) << endl;
+//				kDebug(7034) << "Ed Unknown      : " << (*it) << endl;
 			}
 
 			++it;
@@ -458,76 +458,76 @@ void KDiffPlugin::determineDiffInfo( const QStringList lines,
 			if ( (*it).startsWith( "diff" ) )
 			{
 				(*numberOfFiles)++;
-//				kdDebug(7034) << "Normal File         : " << (*it) << endl;
+//				kDebug(7034) << "Normal File         : " << (*it) << endl;
 			}
 			else if ( normalAdd.exactMatch( *it ) )
 			{
-//				kdDebug(7034) << "Normal Insertion    : " << (*it) << endl;
+//				kDebug(7034) << "Normal Insertion    : " << (*it) << endl;
 				(*numberOfHunks)++;
 				if ( normalAdd.cap(3).isEmpty() )
 				{
 					(*numberOfAdditions)++;
-//					kdDebug(7034) << "Normal Addition : " << 1 << endl;
+//					kDebug(7034) << "Normal Addition : " << 1 << endl;
 				}
 				else
 				{
 					(*numberOfAdditions) += normalAdd.cap(3).toInt() - normalAdd.cap(1).toInt() + 1;
-//					kdDebug(7034) << "Normal Addition : " << normalAdd.cap(3).toInt() - normalAdd.cap(1).toInt() + 1 << endl;
+//					kDebug(7034) << "Normal Addition : " << normalAdd.cap(3).toInt() - normalAdd.cap(1).toInt() + 1 << endl;
 				}
 			}
 			else if ( normalDel.exactMatch( *it ) )
 			{
-//				kdDebug(7034) << "Normal Deletion     : " << (*it) << endl;
+//				kDebug(7034) << "Normal Deletion     : " << (*it) << endl;
 				(*numberOfHunks)++;
 				if ( normalDel.cap(3).isEmpty() )
 				{
 					(*numberOfDeletions)++;
-//					kdDebug(7034) << "Normal Deletion : " << 1 << endl;
+//					kDebug(7034) << "Normal Deletion : " << 1 << endl;
 				}
 				else
 				{
 					(*numberOfDeletions) += normalDel.cap(3).toInt() - normalDel.cap(1).toInt() + 1;
-//					kdDebug(7034) << "Normal Deletion : " << normalDel.cap(3).toInt() - normalDel.cap(1).toInt() + 1 << endl;
+//					kDebug(7034) << "Normal Deletion : " << normalDel.cap(3).toInt() - normalDel.cap(1).toInt() + 1 << endl;
 				}
 			}
 			else if ( normalMod.exactMatch( *it ) )
 			{
-//				kdDebug(7034) << "Normal Modification : " << (*it) << endl;
+//				kDebug(7034) << "Normal Modification : " << (*it) << endl;
 				(*numberOfHunks)++;
 				if ( normalMod.cap(3).isEmpty() )
 				{
 					(*numberOfDeletions)++;
-//					kdDebug(7034) << "Normal Deletion : " << 1 << endl;
+//					kDebug(7034) << "Normal Deletion : " << 1 << endl;
 				}
 				else
 				{
 					(*numberOfDeletions) += normalMod.cap(3).toInt() - normalMod.cap(1).toInt() + 1;
-//					kdDebug(7034) << "Normal Deletion : " << normalMod.cap(3).toInt() - normalMod.cap(1).toInt() + 1 << endl;
+//					kDebug(7034) << "Normal Deletion : " << normalMod.cap(3).toInt() - normalMod.cap(1).toInt() + 1 << endl;
 				}
 				if ( normalMod.cap(6).isEmpty() )
 				{
 					(*numberOfAdditions)++;
-//					kdDebug(7034) << "Normal Addition : " << 1 << endl;
+//					kDebug(7034) << "Normal Addition : " << 1 << endl;
 				}
 				else
 				{
 					(*numberOfAdditions) += normalMod.cap(6).toInt() - normalMod.cap(4).toInt() + 1;
-//					kdDebug(7034) << "Normal Addition : " << normalMod.cap(6).toInt() - normalMod.cap(4).toInt() + 1 << endl;
+//					kDebug(7034) << "Normal Addition : " << normalMod.cap(6).toInt() - normalMod.cap(4).toInt() + 1 << endl;
 				}
 			}
 			else if ( (*it).startsWith(">") )
 			{
 //				numberOfAdditions++;
-//				kdDebug(7034) << "Normal Insertion    : " << (*it) << endl;
+//				kDebug(7034) << "Normal Insertion    : " << (*it) << endl;
 			}
 			else if ( (*it).startsWith("<") )
 			{
 //				numberOfDeletions++;
-//				kdDebug(7034) << "Normal Deletion     : " << (*it) << endl;
+//				kDebug(7034) << "Normal Deletion     : " << (*it) << endl;
 			}
 			else
 			{
-//				kdDebug(7034) << "Normal Unknown      : " << (*it) << endl;
+//				kDebug(7034) << "Normal Unknown      : " << (*it) << endl;
 			}
 
 			++it;
@@ -538,26 +538,26 @@ void KDiffPlugin::determineDiffInfo( const QStringList lines,
 		{
 			if ( (*it).startsWith( "diff" ) ) // works for cvs diff, have to test for normal diff
 			{
-//				kdDebug(7034) << "RCS File      : " << (*it) << endl;
+//				kDebug(7034) << "RCS File      : " << (*it) << endl;
 				(*numberOfFiles)++;
 			}
 			else if ( rcsAdd.exactMatch( *it ) )
 			{
-//				kdDebug(7034) << "RCS Insertion : " << (*it) << endl;
+//				kDebug(7034) << "RCS Insertion : " << (*it) << endl;
 				(*numberOfHunks)++;
 				(*numberOfAdditions) += rcsAdd.cap(1).toInt();
-//				kdDebug(7034) << "RCS noOfLines : " << rcsAdd.cap(1).toInt() << endl;
+//				kDebug(7034) << "RCS noOfLines : " << rcsAdd.cap(1).toInt() << endl;
 			}
 			else if ( rcsDel.exactMatch( *it ) )
 			{
-//				kdDebug(7034) << "RCS Deletion  : " << (*it) << endl;
+//				kDebug(7034) << "RCS Deletion  : " << (*it) << endl;
 				(*numberOfHunks)++;
 				(*numberOfDeletions) += rcsDel.cap(1).toInt();
-//				kdDebug(7034) << "RCS noOfLines : " << rcsDel.cap(1).toInt() << endl;
+//				kDebug(7034) << "RCS noOfLines : " << rcsDel.cap(1).toInt() << endl;
 			}
 			else
 			{
-//				kdDebug(7034) << "RCS Unknown   : " << (*it) << endl;
+//				kDebug(7034) << "RCS Unknown   : " << (*it) << endl;
 			}
 
 			++it;
@@ -569,31 +569,31 @@ void KDiffPlugin::determineDiffInfo( const QStringList lines,
 			if ( (*it).startsWith("@@ ") )
 			{
 				(*numberOfHunks)++;
-//				kdDebug(7034) << "Unified Hunk      : " << (*it) << endl;
+//				kDebug(7034) << "Unified Hunk      : " << (*it) << endl;
 			}
 			else if ( (*it).startsWith("---") )
 			{
 				(*numberOfFiles)++;
-//				kdDebug(7034) << "Unified File      : " << (*it) << endl;
+//				kDebug(7034) << "Unified File      : " << (*it) << endl;
 			}
 			else if ( (*it).startsWith("+++") ) {} // ignore (dont count as insertion)
 			else if ( (*it).startsWith("+") )
 			{
 				(*numberOfAdditions)++;
-//				kdDebug(7034) << "Unified Insertion : " << (*it) << endl;
+//				kDebug(7034) << "Unified Insertion : " << (*it) << endl;
 			}
 			else if ( (*it).startsWith("-") )
 			{
 				(*numberOfDeletions)++;
-//				kdDebug(7034) << "Unified Deletion  : " << (*it) << endl;
+//				kDebug(7034) << "Unified Deletion  : " << (*it) << endl;
 			}
 			else if ( (*it).startsWith(" ") )
 			{
-//				kdDebug(7034) << "Unified Context   : " << (*it) << endl;
+//				kDebug(7034) << "Unified Context   : " << (*it) << endl;
 			}
 			else
 			{
-//				kdDebug(7034) << "Unified Unknown   : " << (*it) << endl;
+//				kDebug(7034) << "Unified Unknown   : " << (*it) << endl;
 			}
 
 			++it;
