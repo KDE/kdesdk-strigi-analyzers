@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=C/C++ Header Info
+Name[fr]=Informations d'en-tête C/C++
 Name[x-test]=xxC/C++ Header Infoxx
 ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_cpp
