@@ -20,7 +20,7 @@ install_targets(${PLUGIN_INSTALL_DIR} kfile_cpp )
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR} FILES kfile_ts.desktop )
+install_files( ${SERVICES_INSTALL_DIR} FILES kfile_h.desktop )
 
 kde4_footer()
 
