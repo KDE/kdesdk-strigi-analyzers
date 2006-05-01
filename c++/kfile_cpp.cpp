@@ -79,11 +79,11 @@ bool KCppPlugin::readInfo( KFileMetaInfo& info, uint )
     int Strings       = 0;
     int Stringsi18n   = 0;
     int Includes      = 0;
-    
+
     bool inComment = false;
-    
+
     QString line;
-    
+
     QTextStream stream( &f );
     while (!stream.atEnd())
     {
@@ -95,7 +95,7 @@ bool KCppPlugin::readInfo( KFileMetaInfo& info, uint )
             emptyLines++;
             continue;
         }
-        
+
         if (line.contains("/*")) inComment = true;
 
         if (!inComment)
@@ -103,22 +103,22 @@ bool KCppPlugin::readInfo( KFileMetaInfo& info, uint )
             codeLines++;
             if (line.contains(QRegExp("^\\s*#\\s*include"))) Includes++;
 
-            int pos = line.find("//");
+            int pos = line.indexOf("//");
             if (pos>=0) commentLines++;
             // truncate the comment - we don't want to count strings in it
             line.truncate(pos);
-                
+
             Strings+=line.count(QRegExp("\".*\""));
 			Stringsi18n+=line.count(QRegExp("(?:i18n|I18N_NOOP)\\s*\\("));
         }
         else
             commentLines++;
-          
+
         if (line.contains("*/")) inComment = false;
     }
 
     KFileMetaInfoGroup group = appendGroup(info, "General");
-    
+
     appendItem(group, "Lines",          int(totalLines));
     appendItem(group, "Code",           int(codeLines));
     appendItem(group, "Comment",        int(commentLines));
