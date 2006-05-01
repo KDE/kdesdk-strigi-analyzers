@@ -15,8 +15,6 @@ kfile_diff_la_LIBADD = $(LIB_KSYCOCA)
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
 
-messages:
-	$(XGETTEXT) *.cpp *.h -o $(podir)/kfile_diff.pot
 
 services_DATA = kfile_diff.desktop
 servicesdir = $(kde_servicesdir)
