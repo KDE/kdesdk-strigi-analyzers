@@ -212,25 +212,25 @@ enum KDiffPlugin::Format KDiffPlugin::determineDiffFormat( const QStringList lin
 	while ( it != lines.end() )
 	{
 		line = (*it);
-		if ( line.find( QRegExp( "^[0-9]+[0-9,]*[acd][0-9]+[0-9,]*$" ), 0 ) == 0 )
+		if ( QRegExp( "^[0-9]+[0-9,]*[acd][0-9]+[0-9,]*$" ).exactMatch( line ) )
 		{
 			return KDiffPlugin::Normal;
 		}
-		else if ( line.find( QRegExp( "^--- " ), 0 ) == 0 )
+		else if ( line.contains( QRegExp( "^--- " ) ) )
 		{
 			// unified has first a '^--- ' line, then a '^+++ ' line
 			return KDiffPlugin::Unified;
 		}
-		else if ( line.find( QRegExp( "^\\*\\*\\* [^\\t]+\\t" ), 0 ) == 0 )
+		else if ( line.contains( QRegExp( "^\\*\\*\\* [^\\t]+\\t" ) ) )
 		{
 			// context has first a '^*** ' line, then a '^--- ' line
 			return KDiffPlugin::Context;
 		}
-		else if ( line.find( QRegExp( "^[acd][0-9]+ [0-9]+" ), 0 ) == 0 )
+		else if ( line.contains( QRegExp( "^[acd][0-9]+ [0-9]+" ) ) )
 		{
 			return KDiffPlugin::RCS;
 		}
-		else if ( line.find( QRegExp( "^[0-9]+[0-9,]*[acd]" ), 0 ) == 0 )
+		else if ( line.contains( QRegExp( "^[0-9]+[0-9,]*[acd]" ) ) )
 		{
 			return KDiffPlugin::Ed;
 		}
