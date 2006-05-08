@@ -27,7 +27,7 @@ class KDiffPlugin: public KFilePlugin
   Q_OBJECT
 
 public:
-	KDiffPlugin( QObject *parent, const char *name,
+	KDiffPlugin( QObject *parent, 
 	             const QStringList& preferredItems );
 
 

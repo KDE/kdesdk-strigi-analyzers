@@ -30,7 +30,7 @@ class KCppPlugin: public KFilePlugin
     Q_OBJECT
 
 public:
-    KCppPlugin(QObject *parent, const char *name, const QStringList& args);
+    KCppPlugin(QObject *parent, const QStringList& args);
     virtual bool readInfo(KFileMetaInfo& info, uint what);
 
 private:

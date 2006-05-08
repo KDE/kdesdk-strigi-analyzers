@@ -46,7 +46,7 @@
 
 K_EXPORT_COMPONENT_FACTORY(kfile_diff, KGenericFactory<KDiffPlugin>("kfile_diff"))
 
-KDiffPlugin::KDiffPlugin(QObject *parent, const char *name,
+KDiffPlugin::KDiffPlugin(QObject *parent, 
                          const QStringList &preferredItems)
 	: KFilePlugin(parent, preferredItems)
 {

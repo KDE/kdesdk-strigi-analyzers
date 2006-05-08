@@ -31,7 +31,7 @@ typedef KGenericFactory<KTsPlugin> TsFactory;
 
 K_EXPORT_COMPONENT_FACTORY(kfile_ts, TsFactory("kfile_ts"))
 
-KTsPlugin::KTsPlugin(QObject *parent, const char *name,
+KTsPlugin::KTsPlugin(QObject *parent,
         const QStringList &args) : KFilePlugin(parent, args)
 {
     makeMimeTypeInfo( "application/x-linguist" );

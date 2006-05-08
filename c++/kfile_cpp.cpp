@@ -33,7 +33,7 @@ typedef KGenericFactory<KCppPlugin> CppFactory;
 
 K_EXPORT_COMPONENT_FACTORY(kfile_cpp, CppFactory("kfile_cpp"))
 
-KCppPlugin::KCppPlugin(QObject *parent, const char *name,
+KCppPlugin::KCppPlugin(QObject *parent, 
                        const QStringList &args)
     : KFilePlugin(parent, args)
 {
