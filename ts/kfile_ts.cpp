@@ -61,10 +61,14 @@ bool KTsPlugin::readInfo(KFileMetaInfo& info, uint)
     int messages      = 0;
     int untranslated  = 0;
     int obsolete      = 0;
-    
-    QString line;
-    
+
     QTextStream stream( &f );
+    QString line = stream.readLine();
+
+    // is it really a linguist file?
+    if (!line.contains("<!DOCTYPE TS>", false))
+        return false;
+
     while (!stream.eof())
     {
         line = stream.readLine();
