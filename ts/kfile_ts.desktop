@@ -40,6 +40,7 @@ Name[tg]=Ахборот дар бораи файл дар формати Qt Ling
 Name[tr]=Qt Dilbilimci Dosya Bilgisi
 Name[uk]=інформація про файл формату Qt Linguist
 Name[zh_CN]=Qt 语言大师文件信息
+Name[zh_TW]=Qt 語言檔資訊
 ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_ts
 MimeType=application/x-linguist
