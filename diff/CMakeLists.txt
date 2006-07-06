@@ -14,12 +14,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kfile_diff )
 
 target_link_libraries(kfile_diff  ${KDE4_KIO_LIBS} )
 
-install_targets(${PLUGIN_INSTALL_DIR} kfile_diff )
+install(TARGETS kfile_diff  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR} FILES kfile_diff.desktop )
+install( FILES kfile_diff.desktop  DESTINATION  ${SERVICES_INSTALL_DIR} )
 
 
 

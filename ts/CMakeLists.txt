@@ -14,12 +14,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kfile_ts )
 
 target_link_libraries(kfile_ts  ${KDE4_KIO_LIBS} )
 
-install_targets(${PLUGIN_INSTALL_DIR} kfile_ts )
+install(TARGETS kfile_ts  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR} FILES kfile_ts.desktop )
+install( FILES kfile_ts.desktop  DESTINATION  ${SERVICES_INSTALL_DIR} )
 
 
 
