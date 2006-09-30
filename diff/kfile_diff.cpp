@@ -132,11 +132,11 @@ bool KDiffPlugin::readInfo( KFileMetaInfo& info, uint what )
 		++it;
 	}
 
-	kDebug(7034) << "Diff Format         : " << format << endl; // i18n-ed but that is not a problem unless i get i18n-ed debug output ah well, we'll figure something out when then happens
+	kDebug(7034) << "Diff Format         : " << format << endl; // i18n-ed but that is not a problem unless I get i18n-ed debug output ah well, we'll figure something out when then happens
 
 	if (what != KFileMetaInfo::Fastest )
 	{
-		// These dont get calculated in fastest mode...
+		// These don't get calculated in fastest mode...
 		kDebug(7034) << "Number of additions : " << numberOfAdditions << endl;
 		kDebug(7034) << "Number of deletions : " << numberOfDeletions << endl;
 		kDebug(7034) << "Number of changes   : " << numberOfChanges << endl;
@@ -576,7 +576,7 @@ void KDiffPlugin::determineDiffInfo( const QStringList lines,
 				(*numberOfFiles)++;
 //				kDebug(7034) << "Unified File      : " << (*it) << endl;
 			}
-			else if ( (*it).startsWith("+++") ) {} // ignore (dont count as insertion)
+			else if ( (*it).startsWith("+++") ) {} // ignore (don't count as insertion)
 			else if ( (*it).startsWith("+") )
 			{
 				(*numberOfAdditions)++;
