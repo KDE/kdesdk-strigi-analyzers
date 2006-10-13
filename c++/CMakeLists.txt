@@ -4,7 +4,7 @@
 
 set(kfile_cpp_PART_SRCS kfile_cpp.cpp )
 
-kde4_automoc(${kfile_cpp_PART_SRCS})
+kde4_automoc(kfile_cpp ${kfile_cpp_PART_SRCS})
 
 kde4_add_plugin(kfile_cpp ${kfile_cpp_PART_SRCS})
 
