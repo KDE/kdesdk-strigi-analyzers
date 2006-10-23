@@ -6,7 +6,7 @@
 
 set(kfile_diff_PART_SRCS kfile_diff.cpp )
 
-kde4_automoc(kfile_diff ${kfile_diff_PART_SRCS})
+kde4_automoc(${kfile_diff_PART_SRCS})
 
 kde4_add_plugin(kfile_diff ${kfile_diff_PART_SRCS})
 
