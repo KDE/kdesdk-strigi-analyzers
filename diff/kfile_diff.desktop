@@ -2,6 +2,7 @@
 Type=Service
 Encoding=UTF-8
 Name=Diff Stats
+Name[el]=Στατιστικά diff
 Name[fr]=Statistiques de diff
 Name[x-test]=xxDiff Statsxx
 ServiceTypes=KFilePlugin
