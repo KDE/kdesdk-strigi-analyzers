@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=Qt Linguist File Info
+Name[bg]=Информация за файла Qt Linguist
 Name[br]=Restr titouroù Qt Linguist
 Name[bs]=Qt Linguist informacije o datoteci
 Name[ca]=Informació fitxer de Qt Linguist
