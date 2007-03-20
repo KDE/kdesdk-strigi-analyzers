@@ -48,5 +48,5 @@ Name[x-test]=xxDiff Statsxx
 Name[zh_TW]=Diff 狀態
 ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_diff
-MimeType=text/x-diff
+MimeType=text/x-patch
 PreferredItems=Files,First,Format,Hunks,Insert,Modify,Delete
