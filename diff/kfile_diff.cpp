@@ -52,7 +52,7 @@ KDiffPlugin::KDiffPlugin(QObject *parent,
 {
 	kDebug(7034) << "diff plugin" << endl;
 
-	KFileMimeTypeInfo* info = addMimeTypeInfo( "text/x-diff" );
+	KFileMimeTypeInfo* info = addMimeTypeInfo( "text/x-patch" );
 
 	KFileMimeTypeInfo::GroupInfo* group;
 	group = addGroupInfo( info, "General", i18n( "General" ) );
