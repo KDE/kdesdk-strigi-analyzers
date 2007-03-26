@@ -39,7 +39,7 @@
 #include <kdebug.h>
 #include <kgenericfactory.h>
 #include <klocale.h>
-#include <kprocess.h>
+#include <k3process.h>
 #include <kurl.h>
 
 #include "kfile_diff.h"
