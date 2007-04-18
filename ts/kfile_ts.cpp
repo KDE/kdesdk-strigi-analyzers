@@ -49,7 +49,7 @@ void KTsPlugin::makeMimeTypeInfo(const QString& mimeType)
     setAttributes(item, KFileMimeTypeInfo::Averaged);
     item = addItemInfo(group, "Untranslated", i18n("Untranslated"), QVariant::Int);
     setAttributes(item, KFileMimeTypeInfo::Averaged);
-    item = addItemInfo(group, "Obsolete", i18n("Obsolete"), QVariant::String);
+    item = addItemInfo(group, "Obsolete", i18n("Obsolete"), QVariant::Int);
 }
 
 bool KTsPlugin::readInfo(KFileMetaInfo& info, uint)
