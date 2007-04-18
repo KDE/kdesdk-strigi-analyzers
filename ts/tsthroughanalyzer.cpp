@@ -97,7 +97,7 @@ InputStream* TsThroughAnalyzer::connectInputStream( InputStream* in ) {
 
     // is it really a linguist file?
     if (!line.contains("<!DOCTYPE TS>", false))
-        return false;
+        return in;
 
     do 
     {
