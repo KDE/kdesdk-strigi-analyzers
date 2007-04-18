@@ -1,24 +1,14 @@
+# build the analyzer as a module
+kde4_add_library(ts MODULE tsthroughanalyzer.cpp)
 
+# link with the required libraries
+target_link_libraries(ts ${STREAMANALYZER_LIBRARY} ${KDE4_KIO_LIBS})
 
+# adjust the name so the module is recognized as a strigi plugin
+set_target_properties(ts PROPERTIES
+    PREFIX strigita_)
 
-
-########### next target ###############
-
-set(kfile_ts_PART_SRCS kfile_ts.cpp )
-
-kde4_automoc(${kfile_ts_PART_SRCS})
-
-kde4_add_plugin(kfile_ts ${kfile_ts_PART_SRCS})
-
-
-
-target_link_libraries(kfile_ts  ${KDE4_KIO_LIBS} )
-
-install(TARGETS kfile_ts  DESTINATION ${PLUGIN_INSTALL_DIR} )
-
-
-########### install files ###############
-
-install( FILES kfile_ts.desktop  DESTINATION  ${SERVICES_INSTALL_DIR} )
+# install the module in the right directory so it is picked up
+install(TARGETS ts LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strigi)
 
 
