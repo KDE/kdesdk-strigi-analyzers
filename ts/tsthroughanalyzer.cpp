@@ -29,7 +29,7 @@
 //qt include
 #include <QFile>
 #include <QTextStream>
-#include <QString>
+
 
 using namespace std;
 using namespace Strigi;
