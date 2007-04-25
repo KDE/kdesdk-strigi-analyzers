@@ -38,13 +38,16 @@ private:
     enum DiffProgram { CVSDiff, Diff, Diff3, Perforce, SubVersion, Undeterminable }; // cant use Unknown again :(
     
     const QString determineI18nedFormat( DiffLineAnalyzer::Format diffFormat ) const;
-    int nbFiles;
-    int hunks;
-    int insertFiles;
-    int modifyFiles;
-    int deleteFiles;
+    const QString determineI18nedProgram( DiffLineAnalyzer::DiffProgram diffProgram ) const;
+    int numberOfFiles;
+    int numberOfHunks;
+    int numberOfAdditions;
+    int numberOfChanges;
+    int numberOfDeletions;
     bool ready;
+    bool indexFound;
     Format diffFormat;
+    DiffProgram diffProgram;
 public:
     DiffLineAnalyzer(const DiffLineAnalyzerFactory* f) :factory(f) {}
     ~DiffLineAnalyzer() {}
