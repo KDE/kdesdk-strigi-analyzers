@@ -29,6 +29,8 @@
 #include <QRegExp>
 #include <QString>
 
+#include <klocale.h>
+
 using namespace std;
 using namespace Strigi;
 
@@ -90,9 +92,43 @@ void DiffLineAnalyzer::endAnalysis(){
     //don't add info if we didn't know diff format
     if(diffFormat != DiffLineAnalyzer::Unknown)
     {
+       analysisResult->addValue(factory->formatField, (const char*)determineI18nedFormat(diffFormat).toUtf8());
     }
     ready = true;
 }
+
+const QString DiffLineAnalyzer::determineI18nedFormat( DiffLineAnalyzer::Format diffFormat ) const
+{
+    QString format;
+    switch( diffFormat )
+    {
+    case DiffLineAnalyzer::Context:
+        format = i18n( "Context" );
+        break;
+    case DiffLineAnalyzer::Ed:
+        format = i18n( "Ed" );
+        break;
+    case DiffLineAnalyzer::Normal:
+        format = i18n( "Normal" );
+        break;
+    case DiffLineAnalyzer::RCS:
+        format = i18n( "RCS" );
+        break;
+    case DiffLineAnalyzer::Unified:
+        format = i18n( "Unified" );
+        break;
+    case DiffLineAnalyzer::Empty:
+        format = i18n( "Not Available (file empty)" );
+        break;
+    case DiffLineAnalyzer::Unknown:
+        format = i18n( "Unknown" );
+        break;
+    case DiffLineAnalyzer::SideBySide:
+        format = i18n( "Side by Side" );
+    }
+    return format;
+}
+
 
 bool DiffLineAnalyzer::isReadyWithStream() {
     return ready;

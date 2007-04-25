@@ -22,7 +22,7 @@
 
 #include <strigi/streamlineanalyzer.h>
 #include <strigi/analyzerplugin.h>
-
+#include <QString>
 
 namespace Strigi {
     class RegisteredField;
@@ -36,6 +36,8 @@ private:
     const DiffLineAnalyzerFactory* factory;
     enum Format      { Context, Ed, Normal, RCS, Unified, Empty, SideBySide, Unknown };
     enum DiffProgram { CVSDiff, Diff, Diff3, Perforce, SubVersion, Undeterminable }; // cant use Unknown again :(
+    
+    const QString determineI18nedFormat( DiffLineAnalyzer::Format diffFormat ) const;
     int nbFiles;
     int hunks;
     int insertFiles;
