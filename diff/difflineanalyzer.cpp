@@ -40,9 +40,9 @@ void DiffLineAnalyzerFactory::registerFields(FieldRegister& reg) {
     formatField = reg.registerField("format" , FieldRegister::stringType, 1, 0);
     diffProgramField = reg.registerField("diff program" , FieldRegister::stringType, 1, 0);
     hunksField = reg.registerField("hunks" , FieldRegister::integerType, 1, 0);
-    insertFilesField = reg.registerField("insert_files" , FieldRegister::integerType, 1, 0);
-    modifyFilesField = reg.registerField("modify_files" , FieldRegister::integerType, 1, 0);
-    deleteFilesField = reg.registerField("delete_files" , FieldRegister::integerType, 1, 0); 
+    insertFilesField = reg.registerField("insert_lines" , FieldRegister::integerType, 1, 0);
+    modifyFilesField = reg.registerField("modify_lines" , FieldRegister::integerType, 1, 0);
+    deleteFilesField = reg.registerField("delete_lines" , FieldRegister::integerType, 1, 0); 
 }
 
 void DiffLineAnalyzer::startAnalysis(AnalysisResult* i) {
