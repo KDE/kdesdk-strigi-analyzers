@@ -143,12 +143,12 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 		else if ( line.startsWith("-") )
 		{
 			numberOfDeletions++;
-//			kDebug(7034) << "Context Deletion  : " << (*it) << endl;
+//			kDebug(7034) << "Context Deletion  : " << line << endl;
 		}
 		else if ( line.startsWith("!") )
 		{
 			numberOfChanges++;
-//			kDebug(7034) << "Context Modified  : " << (*it) << endl;
+//			kDebug(7034) << "Context Modified  : " << line << endl;
 		}
 		else if ( line.startsWith(" ") )
 		{
@@ -167,13 +167,13 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 		if ( line.startsWith( "diff" ) )
 		{
 			numberOfFiles++;
-//			kDebug(7034) << "Ed File         : " << (*it) << endl;
+//			kDebug(7034) << "Ed File         : " << line << endl;
 		}
 		else if ( edAdd.exactMatch( line ) )
 		{
-#if 0
-//				kDebug(7034) << "Ed Insertion    : " << (*it) << endl;
-			(*numberOfHunks)++;
+//				kDebug(7034) << "Ed Insertion    : " << line << endl;
+			numberOfHunks++;
+#if 0			
 				while( it != lines.end() && !(*it).startsWith(".") )
 				{
 					(*numberOfAdditions)++;
@@ -184,14 +184,14 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 		}
 		else if ( edDel.exactMatch( line ) )
 		{
-//				kDebug(7034) << "Ed Deletion     : " << (*it) << endl;
+//				kDebug(7034) << "Ed Deletion     : " << line << endl;
 			numberOfHunks++;
 			numberOfDeletions += (edDel.cap(3).isEmpty() ? 1 : edDel.cap(3).toInt() - edDel.cap(1).toInt() + 1);
 //			kDebug(7034) << "Ed noOfLines    : " << (edDel.cap(3).isEmpty() ? 1 : edDel.cap(3).toInt() - edDel.cap(1).toInt() + 1) << endl;
 		}
 		else if ( edMod.exactMatch( line ) )
 		{
-//				kDebug(7034) << "Ed Modification : " << (*it) << endl;
+//				kDebug(7034) << "Ed Modification : " << line << endl;
 			if ( edMod.cap(3).isEmpty() )
 				numberOfDeletions++;
 			else
@@ -217,11 +217,11 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 		if ( line.startsWith( "diff" ) )
 		{
 			numberOfFiles++;
-//			kDebug(7034) << "Normal File         : " << (*it) << endl;
+//			kDebug(7034) << "Normal File         : " << line << endl;
 		}
 		else if ( normalAdd.exactMatch( line ) )
 		{
-//				kDebug(7034) << "Normal Insertion    : " << (*it) << endl;
+//				kDebug(7034) << "Normal Insertion    : " << line << endl;
 			numberOfHunks++;
 			if ( normalAdd.cap(3).isEmpty() )
 			{
@@ -236,7 +236,7 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 		}
 		else if ( normalDel.exactMatch(line) )
 			{
-//				kDebug(7034) << "Normal Deletion     : " << (*it) << endl;
+//				kDebug(7034) << "Normal Deletion     : " << line << endl;
 			numberOfHunks++;
 			if ( normalDel.cap(3).isEmpty() )
 			{
@@ -251,7 +251,7 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 		}
 		else if ( normalMod.exactMatch( line ) )
 			{
-//				kDebug(7034) << "Normal Modification : " << (*it) << endl;
+//				kDebug(7034) << "Normal Modification : " << line << endl;
 			numberOfHunks++;
 			if ( normalMod.cap(3).isEmpty() )
 			{
@@ -277,72 +277,72 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 		else if ( line.startsWith(">") )
 		{
 //				numberOfAdditions++;
-//				kDebug(7034) << "Normal Insertion    : " << (*it) << endl;
+//				kDebug(7034) << "Normal Insertion    : " << line << endl;
 		}
 		else if ( line.startsWith("<") )
 		{
 //				numberOfDeletions++;
-//				kDebug(7034) << "Normal Deletion     : " << (*it) << endl;
+//				kDebug(7034) << "Normal Deletion     : " << line << endl;
 		}
 		else
 		{
-//			kDebug(7034) << "Normal Unknown      : " << (*it) << endl;
+//			kDebug(7034) << "Normal Unknown      : " << line << endl;
 		}
 		break;
 	case DiffLineAnalyzer::RCS:
 		if ( line.startsWith( "diff" ) ) // works for cvs diff, have to test for normal diff
 		{
-//				kDebug(7034) << "RCS File      : " << (*it) << endl;
+//				kDebug(7034) << "RCS File      : " << line << endl;
 			numberOfFiles++;
 		}
 		else if ( rcsAdd.exactMatch( line ) )
 		{
-//				kDebug(7034) << "RCS Insertion : " << (*it) << endl;
+//				kDebug(7034) << "RCS Insertion : " << line << endl;
 			numberOfHunks++;
 			numberOfAdditions += rcsAdd.cap(1).toInt();
 //				kDebug(7034) << "RCS noOfLines : " << rcsAdd.cap(1).toInt() << endl;
 		}
 		else if ( rcsDel.exactMatch( line ) )
 		{
-//				kDebug(7034) << "RCS Deletion  : " << (*it) << endl;
+//				kDebug(7034) << "RCS Deletion  : " << line << endl;
 			numberOfHunks++;
 			numberOfDeletions += rcsDel.cap(1).toInt();
 //				kDebug(7034) << "RCS noOfLines : " << rcsDel.cap(1).toInt() << endl;
 		}
 		else
 		{
-//				kDebug(7034) << "RCS Unknown   : " << (*it) << endl;
+//				kDebug(7034) << "RCS Unknown   : " << line << endl;
 		}
 		break;
 	case DiffLineAnalyzer::Unified:
 		if ( line.startsWith("@@ ") )
 		{
 			numberOfHunks++;
-//				kDebug(7034) << "Unified Hunk      : " << (*it) << endl;
+			//kDebug(7034) << "Unified Hunk      : " << line << endl;
 		}
 		else if ( line.startsWith("---") )
 		{
 			numberOfFiles++;
-//				kDebug(7034) << "Unified File      : " << (*it) << endl;
+			//kDebug(7034) << "Unified File      : " << line << endl;
 		}
 		else if ( line.startsWith("+++") ) {} // ignore (don't count as insertion)
 		else if ( line.startsWith("+") )
 		{
 			numberOfAdditions++;
-//				kDebug(7034) << "Unified Insertion : " << (*it) << endl;
+			//kDebug(7034) << "Unified Insertion : " << line << endl;
 		}
 		else if ( line.startsWith("-") )
 		{
 			numberOfDeletions++;
-//				kDebug(7034) << "Unified Deletion  : " << (*it) << endl;
+			//kDebug(7034) << "Unified Deletion  : " << line << endl;
 		}
 		else if ( line.startsWith(" ") )
 		{
-//				kDebug(7034) << "Unified Context   : " << (*it) << endl;
+			//kDebug(7034) << "Unified Context   : " << line << endl;
 		}
 		else
 		{
-//				kDebug(7034) << "Unified Unknown   : " << (*it) << endl;
+			//kDebug(7034) << "Unified Unknown   : " << line << endl;
 		}
 		break;
 	case DiffLineAnalyzer::Empty:
