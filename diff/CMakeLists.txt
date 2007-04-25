@@ -1,24 +1,13 @@
+# build the analyzer as a module
+kde4_add_library(diff MODULE difflineanalyzer.cpp)
 
+# link with the required libraries
+target_link_libraries(diff ${STREAMANALYZER_LIBRARY} ${KDE4_KIO_LIBS})
 
+# adjust the name so the module is recognized as a strigi plugin
+set_target_properties(diff PROPERTIES
+    PREFIX strigila_)
 
-
-########### next target ###############
-
-set(kfile_diff_PART_SRCS kfile_diff.cpp )
-
-kde4_automoc(${kfile_diff_PART_SRCS})
-
-kde4_add_plugin(kfile_diff ${kfile_diff_PART_SRCS})
-
-
-
-target_link_libraries(kfile_diff  ${KDE4_KIO_LIBS} )
-
-install(TARGETS kfile_diff  DESTINATION ${PLUGIN_INSTALL_DIR} )
-
-
-########### install files ###############
-
-install( FILES kfile_diff.desktop  DESTINATION  ${SERVICES_INSTALL_DIR} )
-
+# install the module in the right directory so it is picked up
+install(TARGETS diff LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strigi)
 
