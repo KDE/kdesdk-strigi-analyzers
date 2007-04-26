@@ -35,14 +35,14 @@ using namespace std;
 using namespace Strigi;
 
 void DiffLineAnalyzerFactory::registerFields(FieldRegister& reg) {
-    nbFilesField = reg.registerField("files" , FieldRegister::integerType, 1, 0);
-    firstFileField = reg.registerField("first_file" , FieldRegister::stringType, 1, 0);    
-    formatField = reg.registerField("format" , FieldRegister::stringType, 1, 0);
-    diffProgramField = reg.registerField("diff program" , FieldRegister::stringType, 1, 0);
-    hunksField = reg.registerField("hunks" , FieldRegister::integerType, 1, 0);
-    insertFilesField = reg.registerField("insert_lines" , FieldRegister::integerType, 1, 0);
-    modifyFilesField = reg.registerField("modify_lines" , FieldRegister::integerType, 1, 0);
-    deleteFilesField = reg.registerField("delete_lines" , FieldRegister::integerType, 1, 0); 
+    nbFilesField = reg.registerField("TODO.number_modifiy_files" , FieldRegister::integerType, 1, 0);
+    firstFileField = reg.registerField("TODO.first_modify_file" , FieldRegister::stringType, 1, 0);    
+    formatField = reg.registerField("TODO.diff_format" , FieldRegister::stringType, 1, 0);
+    diffProgramField = reg.registerField("TODO.diff_program" , FieldRegister::stringType, 1, 0);
+    hunksField = reg.registerField("TODO.hunks" , FieldRegister::integerType, 1, 0);
+    insertFilesField = reg.registerField("TODO.number_insert_lines" , FieldRegister::integerType, 1, 0);
+    modifyFilesField = reg.registerField("TODO.number_modify_lines" , FieldRegister::integerType, 1, 0);
+    deleteFilesField = reg.registerField("TODO.number_delete_lines" , FieldRegister::integerType, 1, 0); 
 }
 
 void DiffLineAnalyzer::startAnalysis(AnalysisResult* i) {
@@ -70,7 +70,6 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 	if(firstFile.exactMatch( line))
 	{
         	QString filename = firstFile.cap(1);
-		kDebug()<<" 11111111111111111111111 :"<<filename<<endl;
         	analysisResult->addValue(factory->firstFileField, (const char*)filename.toUtf8());
 	}
 	indexFound = true;
