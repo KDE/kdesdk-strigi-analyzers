@@ -1,3 +1,5 @@
+include_directories(${STRIGI_INCLUDE_DIR})
+
 # build the analyzer as a module
 kde4_add_library(ts MODULE tsthroughanalyzer.cpp)
 
