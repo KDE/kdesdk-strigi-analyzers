@@ -35,14 +35,14 @@ using namespace std;
 using namespace Strigi;
 
 void DiffLineAnalyzerFactory::registerFields(FieldRegister& reg) {
-    nbFilesField = reg.registerField("TODO.number_modifiy_files" , FieldRegister::integerType, 1, 0);
-    firstFileField = reg.registerField("TODO.first_modify_file" , FieldRegister::stringType, 1, 0);    
-    formatField = reg.registerField("TODO.diff_format" , FieldRegister::stringType, 1, 0);
-    diffProgramField = reg.registerField("TODO.diff_program" , FieldRegister::stringType, 1, 0);
-    hunksField = reg.registerField("TODO.hunks" , FieldRegister::integerType, 1, 0);
-    insertFilesField = reg.registerField("TODO.number_insert_lines" , FieldRegister::integerType, 1, 0);
-    modifyFilesField = reg.registerField("TODO.number_modify_lines" , FieldRegister::integerType, 1, 0);
-    deleteFilesField = reg.registerField("TODO.number_delete_lines" , FieldRegister::integerType, 1, 0); 
+    nbFilesField = reg.registerField("diff.stats.modify_file_count" , FieldRegister::integerType, 1, 0);
+    firstFileField = reg.registerField("diff.first_modify_file" , FieldRegister::stringType, 1, 0);    
+    formatField = reg.registerField("content.format_subtype" , FieldRegister::stringType, 1, 0);
+    diffProgramField = reg.registerField("content.generator" , FieldRegister::stringType, 1, 0);
+    hunksField = reg.registerField("diff.stats.hunk_count" , FieldRegister::integerType, 1, 0);
+    insertFilesField = reg.registerField("diff.stats.insert_line_count" , FieldRegister::integerType, 1, 0);
+    modifyFilesField = reg.registerField("diff.stats.modify_line_count" , FieldRegister::integerType, 1, 0);
+    deleteFilesField = reg.registerField("diff.stats.delete_line_count" , FieldRegister::integerType, 1, 0); 
 }
 
 void DiffLineAnalyzer::startAnalysis(AnalysisResult* i) {
