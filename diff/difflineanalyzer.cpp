@@ -388,7 +388,7 @@ const QString DiffLineAnalyzer::determineI18nedProgram( DiffLineAnalyzer::DiffPr
         program = i18n( "Perforce" );
         break;
     case DiffLineAnalyzer::SubVersion:
-        program = i18n( "SubVersion" );
+        program = i18n( "Subversion" );
         break;
     case DiffLineAnalyzer::Undeterminable:
         program = i18n( "Unknown" );
