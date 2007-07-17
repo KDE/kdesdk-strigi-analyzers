@@ -39,7 +39,9 @@ class TsThroughAnalyzer : public StreamThroughAnalyzer {
     private:
         const TsThroughAnalyzerFactory* factory;
         AnalysisResult* idx;
-
+        const char* name() const {
+	   return "TsThroughAnalyzer";
+	} 
         void setIndexable( AnalysisResult *i ) {
             idx = i;
         }
