@@ -51,6 +51,7 @@ private:
 public:
     DiffLineAnalyzer(const DiffLineAnalyzerFactory* f) :factory(f) {}
     ~DiffLineAnalyzer() {}
+    virtual void endAnalysis(bool /*complete*/) {} 
     const char* name() const { return "DiffLineAnalyzer"; }
     void startAnalysis(Strigi::AnalysisResult*);
     void handleLine(const char* data, uint32_t length);
