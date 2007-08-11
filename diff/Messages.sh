@@ -1,2 +1,2 @@
 #! /bin/sh
-$XGETTEXT *.cpp *.h -o $podir/kfile_diff.pot
+$XGETTEXT *.cpp -o $podir/strigila_diff.pot
