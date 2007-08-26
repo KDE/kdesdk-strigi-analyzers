@@ -106,7 +106,7 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
             diffFormat = DiffLineAnalyzer::Ed;
         }
     }
-    else //analyse files
+    else //analyze files
     {
 	QRegExp edAdd( "([0-9]+)(|,([0-9]+))a" );
 	QRegExp edDel( "([0-9]+)(|,([0-9]+))d" );
