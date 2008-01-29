@@ -59,7 +59,7 @@ void DiffLineAnalyzer::startAnalysis(AnalysisResult* i) {
 
 }
 
-void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
+void DiffLineAnalyzer::handleLine(const char* data, uint32_t /*length*/) {
     QString line(data);
 
     QRegExp diffRE( "^diff .*" );
