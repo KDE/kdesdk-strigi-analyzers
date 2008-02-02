@@ -36,13 +36,13 @@ using namespace Strigi;
 
 void DiffLineAnalyzerFactory::registerFields(FieldRegister& reg) {
     nbFilesField = reg.registerField("diff.stats.modify_file_count" , FieldRegister::integerType, 1, 0);
-    firstFileField = reg.registerField("diff.first_modify_file" , FieldRegister::stringType, 1, 0);    
+    firstFileField = reg.registerField("diff.first_modify_file" , FieldRegister::stringType, 1, 0);
     formatField = reg.registerField("content.format_subtype" , FieldRegister::stringType, 1, 0);
     diffProgramField = reg.registerField("content.generator" , FieldRegister::stringType, 1, 0);
     hunksField = reg.registerField("diff.stats.hunk_count" , FieldRegister::integerType, 1, 0);
     insertFilesField = reg.registerField("diff.stats.insert_line_count" , FieldRegister::integerType, 1, 0);
     modifyFilesField = reg.registerField("diff.stats.modify_line_count" , FieldRegister::integerType, 1, 0);
-    deleteFilesField = reg.registerField("diff.stats.delete_line_count" , FieldRegister::integerType, 1, 0); 
+    deleteFilesField = reg.registerField("diff.stats.delete_line_count" , FieldRegister::integerType, 1, 0);
 }
 
 void DiffLineAnalyzer::startAnalysis(AnalysisResult* i) {
@@ -59,8 +59,8 @@ void DiffLineAnalyzer::startAnalysis(AnalysisResult* i) {
 
 }
 
-void DiffLineAnalyzer::handleLine(const char* data, uint32_t /*length*/) {
-    QString line(data);
+void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
+    QString line(QString::fromUtf8(data, length));
 
     QRegExp diffRE( "^diff .*" );
     QRegExp p4sRE("^==== ");
@@ -80,7 +80,7 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t /*length*/) {
         diffProgram = DiffLineAnalyzer::Diff;
     else if ( p4sRE.exactMatch( line ) )
         diffProgram = DiffLineAnalyzer::Perforce;
-    
+
     if(diffFormat == DiffLineAnalyzer::Unknown) //search format
     {
         if ( QRegExp( "^[0-9]+[0-9,]*[acd][0-9]+[0-9,]*$" ).exactMatch( line ) )
@@ -172,7 +172,7 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t /*length*/) {
 		{
 //				kDebug(7034) << "Ed Insertion    : " << line << endl;
 			numberOfHunks++;
-#if 0			
+#if 0
 				while( it != lines.end() && !(*it).startsWith(".") )
 				{
 					(*numberOfAdditions)++;
@@ -348,7 +348,7 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t /*length*/) {
 	case DiffLineAnalyzer::Unknown:
 	case DiffLineAnalyzer::SideBySide:
 		break;
-	}	    
+	}
     }
 }
 
