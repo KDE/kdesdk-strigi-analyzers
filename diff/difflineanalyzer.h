@@ -23,6 +23,7 @@
 #include <strigi/streamlineanalyzer.h>
 #include <strigi/analyzerplugin.h>
 #include <QString>
+#include <QRegExp>
 
 namespace Strigi {
     class RegisteredField;
@@ -36,7 +37,7 @@ private:
     const DiffLineAnalyzerFactory* factory;
     enum Format      { Context, Ed, Normal, RCS, Unified, Empty, SideBySide, Unknown };
     enum DiffProgram { CVSDiff, Diff, Diff3, Perforce, SubVersion, Undeterminable }; // cant use Unknown again :(
-    
+
     const QString determineI18nedFormat( DiffLineAnalyzer::Format diffFormat ) const;
     const QString determineI18nedProgram( DiffLineAnalyzer::DiffProgram diffProgram ) const;
     int numberOfFiles;
@@ -48,8 +49,17 @@ private:
     bool indexFound;
     Format diffFormat;
     DiffProgram diffProgram;
+
+    QRegExp m_diffRE;
+    QRegExp m_p4sRE;
+    QRegExp m_firstFile;
 public:
-    DiffLineAnalyzer(const DiffLineAnalyzerFactory* f) :factory(f) {}
+    DiffLineAnalyzer(const DiffLineAnalyzerFactory* f)
+            : factory(f)
+            , m_diffRE( "^diff .*" )
+            , m_p4sRE("^==== ")
+            , m_firstFile( "^Index: (.*)" )
+            {}
     ~DiffLineAnalyzer() {}
     virtual void endAnalysis(bool /*complete*/) {} 
     const char* name() const { return "DiffLineAnalyzer"; }

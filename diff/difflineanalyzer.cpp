@@ -62,23 +62,20 @@ void DiffLineAnalyzer::startAnalysis(AnalysisResult* i) {
 void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
     QString line(QString::fromUtf8(data, length));
 
-    QRegExp diffRE( "^diff .*" );
-    QRegExp p4sRE("^==== ");
-    QRegExp firstFile( "^Index: (.*)" );
     if(line.startsWith( "Index:" ) && !indexFound)
     {
-	if(firstFile.exactMatch( line))
+	if(m_firstFile.exactMatch( line))
 	{
-        	QString filename = firstFile.cap(1);
+        	QString filename = m_firstFile.cap(1);
         	analysisResult->addValue(factory->firstFileField, (const char*)filename.toUtf8());
 	}
 	indexFound = true;
     }
     else if ( line.startsWith( "retrieving revision") )
 	diffProgram = DiffLineAnalyzer::CVSDiff;
-    else if ( diffRE.exactMatch( line ) )
+    else if ( m_diffRE.exactMatch( line ) )
         diffProgram = DiffLineAnalyzer::Diff;
-    else if ( p4sRE.exactMatch( line ) )
+    else if ( m_p4sRE.exactMatch( line ) )
         diffProgram = DiffLineAnalyzer::Perforce;
 
     if(diffFormat == DiffLineAnalyzer::Unknown) //search format
