@@ -4,7 +4,7 @@ include_directories(${STRIGI_INCLUDE_DIR})
 kde4_add_library(diff MODULE difflineanalyzer.cpp)
 
 # link with the required libraries
-target_link_libraries(diff ${STREAMANALYZER_LIBRARY} ${KDE4_KIO_LIBS})
+target_link_libraries(diff ${STRIGI_STREAMANALYZER_LIBRARY} ${KDE4_KIO_LIBS})
 
 # adjust the name so the module is recognized as a strigi plugin
 set_target_properties(diff PROPERTIES
