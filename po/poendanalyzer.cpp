@@ -95,7 +95,7 @@ bool PoEndAnalyzer::checkHeader(const char* header, int32_t headersize) const
 {
     //I guess, this is sufficient
     QByteArray data(QByteArray::fromRawData(header,headersize));
-    if (!data.contains("\nmsgid \"\"\n") || !data.contains("PO-Revision-Date"))
+    if (!data.contains("msgid \"\"\nmsgstr \"\"") || !data.contains("PO-Revision-Date"))
         return false;
 
     return true;
