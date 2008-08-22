@@ -41,7 +41,7 @@ class PoEndAnalyzer : public StreamEndAnalyzer {
         PoEndAnalyzer(const PoEndAnalyzerFactory* f):factory(f) {}
         const char* name() const {return "PoEndAnalyzer";}
         bool checkHeader(const char* header, int32_t headersize) const;
-        char analyze(Strigi::AnalysisResult& idx,Strigi::InputStream* in);
+        signed char analyze(Strigi::AnalysisResult& idx,Strigi::InputStream* in);
     private:
         const PoEndAnalyzerFactory* factory;
 };
@@ -103,7 +103,7 @@ bool PoEndAnalyzer::checkHeader(const char* header, int32_t headersize) const
 }
 
 
-char PoEndAnalyzer::analyze(AnalysisResult& idx, InputStream* in)
+signed char PoEndAnalyzer::analyze(AnalysisResult& idx, InputStream* in)
 {
     if (idx.extension()=="svn-base")
         return Ok;
