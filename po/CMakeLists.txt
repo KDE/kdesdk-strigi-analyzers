@@ -1,5 +1,10 @@
 include_directories(${STRIGI_INCLUDE_DIR} ${QT_INCLUDES})
 
+macro_bool_to_01(STRIGI_NEEDS_SIGNED_CHAR STRIGI_NEEDS_SIGNED_CHAR_01)
+
+configure_file(config-strigi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-strigi.h )
+
+
 # build the analyzer as a module
 kde4_add_library(po MODULE poendanalyzer.cpp)
 

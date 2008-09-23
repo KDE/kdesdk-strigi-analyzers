@@ -29,6 +29,7 @@
 #include <strigi/analyzerplugin.h>
 #include <strigi/fieldtypes.h>
 #include <strigi/analysisresult.h>
+#include "config-strigi.h"
 
 #include <iostream>
 
@@ -41,7 +42,7 @@ class PoEndAnalyzer : public StreamEndAnalyzer {
         PoEndAnalyzer(const PoEndAnalyzerFactory* f):factory(f) {}
         const char* name() const {return "PoEndAnalyzer";}
         bool checkHeader(const char* header, int32_t headersize) const;
-        char analyze(Strigi::AnalysisResult& idx,Strigi::InputStream* in);
+        STRIGI_ENDANALYZER_RETVAL analyze(Strigi::AnalysisResult& idx,Strigi::InputStream* in);
     private:
         const PoEndAnalyzerFactory* factory;
 };
@@ -103,7 +104,7 @@ bool PoEndAnalyzer::checkHeader(const char* header, int32_t headersize) const
 }
 
 
-char PoEndAnalyzer::analyze(AnalysisResult& idx, InputStream* in)
+STRIGI_ENDANALYZER_RETVAL PoEndAnalyzer::analyze(AnalysisResult& idx, InputStream* in)
 {
     if (idx.extension()=="svn-base")
         return Ok;
