@@ -34,6 +34,19 @@
 using namespace std;
 using namespace Strigi;
 
+DiffLineAnalyzer::DiffLineAnalyzer(const DiffLineAnalyzerFactory* f)
+    : factory(f),
+    eq3("==="), plus3("+++"), minus3("---"), asterisk3("***"), index("Index:"),
+    retrieving("retrieving revision"), diff("diff"), asterisks("***************"),
+    normalFormat("^[0-9]+[0-9,]*[acd][0-9]+[0-9,]*$"), contextFormat("^\\*\\*\\* [^\\t]+\\t"),
+    rcsFormat("^[acd][0-9]+ [0-9]+"), edFormat("^[0-9]+[0-9,]*[acd]"),
+    edAdd( "([0-9]+)(|,([0-9]+))a" ), edDel( "([0-9]+)(|,([0-9]+))d" ),
+    edMod( "([0-9]+)(|,([0-9]+))c" ), normalAdd( "[0-9]+a([0-9]+)(|,([0-9]+))" ),
+    normalDel( "([0-9]+)(|,([0-9]+))d(|[0-9]+)" ), normalMod( "([0-9]+)(|,([0-9]+))c([0-9]+)(|,([0-9]+))" ),
+    rcsAdd( "a[0-9]+ ([0-9]+)" ), rcsDel( "d[0-9]+ ([0-9]+)" )
+    {}
+
+
 void DiffLineAnalyzerFactory::registerFields(FieldRegister& reg) {
     nbFilesField = reg.registerField("diff.stats.modify_file_count" , FieldRegister::integerType, 1, 0);
     firstFileField = reg.registerField("diff.first_modify_file" , FieldRegister::stringType, 1, 0);
@@ -62,91 +75,80 @@ void DiffLineAnalyzer::startAnalysis(AnalysisResult* i) {
 void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
     QString line(QString::fromUtf8(data, length));
 
-    if(line.startsWith( "Index:" ) && !indexFound)
+    if( !indexFound && line.startsWith(index) ) 
     {
-	if(m_firstFile.exactMatch( line))
-	{
-        	QString filename = m_firstFile.cap(1);
-        	analysisResult->addValue(factory->firstFileField, (const char*)filename.toUtf8());
-	}
+        QString fileName=line.mid(7);
+        analysisResult->addValue(factory->firstFileField, (const char*)fileName.toUtf8().data());
 	indexFound = true;
     }
-    else if ( line.startsWith( "retrieving revision") )
+    else if ( line.startsWith(retrieving) )
 	diffProgram = DiffLineAnalyzer::CVSDiff;
-    else if ( m_diffRE.exactMatch( line ) )
+    else if ( line.startsWith(diff) && line[4]==' ' )
         diffProgram = DiffLineAnalyzer::Diff;
-    else if ( m_p4sRE.exactMatch( line ) )
+    else if ( line.startsWith(eq3) && data[3]==' ' )
         diffProgram = DiffLineAnalyzer::Perforce;
 
+    bool digit0=data[0]>='0' && data[0]<='9';
+    
     if(diffFormat == DiffLineAnalyzer::Unknown) //search format
     {
-        if ( QRegExp( "^[0-9]+[0-9,]*[acd][0-9]+[0-9,]*$" ).exactMatch( line ) )
+        if ( digit0 && normalFormat.exactMatch( line ) )
         {
             diffFormat = DiffLineAnalyzer::Normal;
         }
-        else if ( line.contains( QRegExp( "^--- " ) ) )
+        else if ( line[3]==' ' && line.startsWith(minus3) ) 
         {
             // unified has first a '^--- ' line, then a '^+++ ' line
             diffFormat = DiffLineAnalyzer::Unified;
         }
-        else if ( line.contains( QRegExp( "^\\*\\*\\* [^\\t]+\\t" ) ) )
+        else if ( line[0] == '*' && line.contains( contextFormat ) )
         {
             // context has first a '^*** ' line, then a '^--- ' line
             diffFormat = DiffLineAnalyzer::Context;
         }
-        else if ( line.contains( QRegExp( "^[acd][0-9]+ [0-9]+" ) ) )
+        else if ( (line[0]=='a' || line[0]=='c' || line[0]=='d') &&  line.contains( rcsFormat ) )
         {
             diffFormat =  DiffLineAnalyzer::RCS;
         }
-        else if ( line.contains( QRegExp( "^[0-9]+[0-9,]*[acd]" ) ) )
+        else if ( digit0 && line.contains( edFormat ) )
         {
             diffFormat = DiffLineAnalyzer::Ed;
         }
     }
-    else //analyze files
+    
+    if (diffFormat != DiffLineAnalyzer::Unknown)
+    //analyze files
     {
-	QRegExp edAdd( "([0-9]+)(|,([0-9]+))a" );
-	QRegExp edDel( "([0-9]+)(|,([0-9]+))d" );
-	QRegExp edMod( "([0-9]+)(|,([0-9]+))c" );
-
-	QRegExp normalAdd( "[0-9]+a([0-9]+)(|,([0-9]+))" );
-	QRegExp normalDel( "([0-9]+)(|,([0-9]+))d(|[0-9]+)" );
-	QRegExp normalMod( "([0-9]+)(|,([0-9]+))c([0-9]+)(|,([0-9]+))" );
-
-	QRegExp rcsAdd( "a[0-9]+ ([0-9]+)" );
-	QRegExp rcsDel( "d[0-9]+ ([0-9]+)" );
-
-
 	switch( diffFormat )
 	{
 	case DiffLineAnalyzer::Context:
-		if ( line.startsWith("***************") )
+		if ( line.startsWith(asterisks) )
 		{
 			numberOfHunks++;
 			//kDebug(7034) << "Context Hunk      : " << line << endl;
 		}
-		else if ( line.startsWith("***") )
+		else if ( line.startsWith(asterisk3) )
 		{
 			numberOfFiles++;
 			//kDebug(7034) << "Context File      : " << line << endl;
 		}
-		else if ( line.startsWith("---") ) {} // ignore
-		else if ( line.startsWith("+") )
+		else if ( line.startsWith(minus3) ) {} // ignore
+		else if ( line[0]=='+' )
 		{
 			numberOfAdditions++;
 //			kDebug(7034) << "Context Insertion : " << line << endl;
 		}
-		else if ( line.startsWith("-") )
+		else if ( line[0]=='-' )
 		{
 			numberOfDeletions++;
 //			kDebug(7034) << "Context Deletion  : " << line << endl;
 		}
-		else if ( line.startsWith("!") )
+		else if ( line[0]=='!' )
 		{
 			numberOfChanges++;
 //			kDebug(7034) << "Context Modified  : " << line << endl;
 		}
-		else if ( line.startsWith(" ") )
+		else if ( line[0]==' ' )
 		{
 //				kDebug(7034) << "Context Context   : " << line << endl;
 		}
@@ -160,17 +162,17 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 #endif
 		break;
 	case DiffLineAnalyzer::Ed:
-		if ( line.startsWith( "diff" ) )
+		if ( line.startsWith( diff ) )
 		{
 			numberOfFiles++;
 //			kDebug(7034) << "Ed File         : " << line << endl;
 		}
-		else if ( edAdd.exactMatch( line ) )
+		else if ( digit0 && edAdd.exactMatch( line ) )
 		{
 //				kDebug(7034) << "Ed Insertion    : " << line << endl;
 			numberOfHunks++;
 #if 0
-				while( it != lines.end() && !(*it).startsWith(".") )
+				while( it != lines.end() && !(*it)[0]=='.' )
 				{
 					(*numberOfAdditions)++;
 //					kDebug(7034) << "Ed Insertion    : " << (*it) << endl;
@@ -178,14 +180,14 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 				}
 #endif
 		}
-		else if ( edDel.exactMatch( line ) )
+		else if ( digit0 && edDel.exactMatch( line ) )
 		{
 //				kDebug(7034) << "Ed Deletion     : " << line << endl;
 			numberOfHunks++;
 			numberOfDeletions += (edDel.cap(3).isEmpty() ? 1 : edDel.cap(3).toInt() - edDel.cap(1).toInt() + 1);
 //			kDebug(7034) << "Ed noOfLines    : " << (edDel.cap(3).isEmpty() ? 1 : edDel.cap(3).toInt() - edDel.cap(1).toInt() + 1) << endl;
 		}
-		else if ( edMod.exactMatch( line ) )
+		else if ( digit0 && edMod.exactMatch( line ) )
 		{
 //				kDebug(7034) << "Ed Modification : " << line << endl;
 			if ( edMod.cap(3).isEmpty() )
@@ -210,12 +212,12 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 
 		break;
 	case DiffLineAnalyzer::Normal:
-		if ( line.startsWith( "diff" ) )
+		if ( line.startsWith( diff ) )
 		{
 			numberOfFiles++;
 //			kDebug(7034) << "Normal File         : " << line << endl;
 		}
-		else if ( normalAdd.exactMatch( line ) )
+		else if ( digit0 && normalAdd.exactMatch( line ) )
 		{
 //				kDebug(7034) << "Normal Insertion    : " << line << endl;
 			numberOfHunks++;
@@ -230,7 +232,7 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 //					kDebug(7034) << "Normal Addition : " << normalAdd.cap(3).toInt() - normalAdd.cap(1).toInt() + 1 << endl;
 			}
 		}
-		else if ( normalDel.exactMatch(line) )
+		else if ( digit0 && normalDel.exactMatch(line) )
 			{
 //				kDebug(7034) << "Normal Deletion     : " << line << endl;
 			numberOfHunks++;
@@ -245,7 +247,7 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 //					kDebug(7034) << "Normal Deletion : " << normalDel.cap(3).toInt() - normalDel.cap(1).toInt() + 1 << endl;
 			}
 		}
-		else if ( normalMod.exactMatch( line ) )
+		else if ( digit0 && normalMod.exactMatch( line ) )
 			{
 //				kDebug(7034) << "Normal Modification : " << line << endl;
 			numberOfHunks++;
@@ -270,12 +272,12 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 //					kDebug(7034) << "Normal Addition : " << normalMod.cap(6).toInt() - normalMod.cap(4).toInt() + 1 << endl;
 			}
 		}
-		else if ( line.startsWith(">") )
+		else if ( line[0]=='>' )
 		{
 //				numberOfAdditions++;
 //				kDebug(7034) << "Normal Insertion    : " << line << endl;
 		}
-		else if ( line.startsWith("<") )
+		else if ( line[0]=='<' )
 		{
 //				numberOfDeletions++;
 //				kDebug(7034) << "Normal Deletion     : " << line << endl;
@@ -286,7 +288,7 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 		}
 		break;
 	case DiffLineAnalyzer::RCS:
-		if ( line.startsWith( "diff" ) ) // works for cvs diff, have to test for normal diff
+		if ( line.startsWith( diff ) ) // works for cvs diff, have to test for normal diff
 		{
 //				kDebug(7034) << "RCS File      : " << line << endl;
 			numberOfFiles++;
@@ -311,28 +313,28 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 		}
 		break;
 	case DiffLineAnalyzer::Unified:
-		if ( line.startsWith("@@ ") )
+		if ( line[0]=='@' && line[1]=='@' && line[2]==' ' )
 		{
 			numberOfHunks++;
 			//kDebug(7034) << "Unified Hunk      : " << line << endl;
 		}
-		else if ( line.startsWith("---") )
+		else if ( line.startsWith(minus3) )
 		{
 			numberOfFiles++;
 			//kDebug(7034) << "Unified File      : " << line << endl;
 		}
-		else if ( line.startsWith("+++") ) {} // ignore (don't count as insertion)
-		else if ( line.startsWith("+") )
+		else if ( line.startsWith(plus3) ) {} // ignore (don't count as insertion)
+		else if ( line[0]=='+' )
 		{
 			numberOfAdditions++;
 			//kDebug(7034) << "Unified Insertion : " << line << endl;
 		}
-		else if ( line.startsWith("-") )
+		else if ( line[0]=='-' )
 		{
 			numberOfDeletions++;
 			//kDebug(7034) << "Unified Deletion  : " << line << endl;
 		}
-		else if ( line.startsWith(" ") )
+		else if ( line[0]==' ' )
 		{
 			//kDebug(7034) << "Unified Context   : " << line << endl;
 		}
@@ -349,7 +351,7 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
     }
 }
 
-void DiffLineAnalyzer::endAnalysis(){
+void DiffLineAnalyzer::endAnalysis(bool complete){
     //don't add info if we didn't know diff format
     if(diffFormat != DiffLineAnalyzer::Unknown)
     {
@@ -357,11 +359,13 @@ void DiffLineAnalyzer::endAnalysis(){
        if ( indexFound && diffProgram ==DiffLineAnalyzer::Undeterminable) // but no "retrieving revision" found like only cvs diff adds.
           diffProgram = DiffLineAnalyzer::SubVersion;
        analysisResult->addValue(factory->diffProgramField, (const char*)determineI18nedProgram(diffProgram).toUtf8());
-       analysisResult->addValue(factory->nbFilesField, numberOfFiles);
-       analysisResult->addValue(factory->insertFilesField, numberOfAdditions);
-       analysisResult->addValue(factory->modifyFilesField, numberOfChanges);
-       analysisResult->addValue(factory->deleteFilesField, numberOfDeletions);
-       analysisResult->addValue(factory->hunksField, numberOfHunks);
+       if (complete) {
+        analysisResult->addValue(factory->nbFilesField, numberOfFiles);
+        analysisResult->addValue(factory->insertFilesField, numberOfAdditions);
+        analysisResult->addValue(factory->modifyFilesField, numberOfChanges);
+        analysisResult->addValue(factory->deleteFilesField, numberOfDeletions);
+        analysisResult->addValue(factory->hunksField, numberOfHunks);
+       }
     }
     ready = true;
 }

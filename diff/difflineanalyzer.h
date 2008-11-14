@@ -49,23 +49,34 @@ private:
     bool indexFound;
     Format diffFormat;
     DiffProgram diffProgram;
-
-    QRegExp m_diffRE;
-    QRegExp m_p4sRE;
-    QRegExp m_firstFile;
+    const QString eq3;
+    const QString plus3;
+    const QString minus3;
+    const QString asterisk3;
+    const QString index;
+    const QString retrieving;
+    const QString diff;
+    const QString asterisks;
+    const QRegExp normalFormat;
+    const QRegExp contextFormat;
+    const QRegExp rcsFormat;
+    const QRegExp edFormat;
+    QRegExp edAdd;    
+    QRegExp edDel;    
+    QRegExp edMod;    
+    QRegExp normalAdd;    
+    QRegExp normalDel;    
+    QRegExp normalMod;    
+    QRegExp rcsAdd;    
+    QRegExp rcsDel;    
+    
 public:
-    DiffLineAnalyzer(const DiffLineAnalyzerFactory* f)
-            : factory(f)
-            , m_diffRE( "^diff .*" )
-            , m_p4sRE("^==== ")
-            , m_firstFile( "^Index: (.*)" )
-            {}
+    DiffLineAnalyzer(const DiffLineAnalyzerFactory* f);
     ~DiffLineAnalyzer() {}
-    virtual void endAnalysis(bool /*complete*/) {} 
+    virtual void endAnalysis(bool complete); 
     const char* name() const { return "DiffLineAnalyzer"; }
     void startAnalysis(Strigi::AnalysisResult*);
     void handleLine(const char* data, uint32_t length);
-    void endAnalysis();
     bool isReadyWithStream();
 };
 
