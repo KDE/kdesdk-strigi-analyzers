@@ -1,6 +1,7 @@
 /* This file is part of Strigi Desktop Search
  *
  * Copyright (C) 2007 Laurent Montel <montel@kde.org>
+ * Copyright (C) 2008 Jakub Stachowski <qbast@go2.pl>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -49,14 +50,6 @@ private:
     bool indexFound;
     Format diffFormat;
     DiffProgram diffProgram;
-    const QString eq3;
-    const QString plus3;
-    const QString minus3;
-    const QString asterisk3;
-    const QString index;
-    const QString retrieving;
-    const QString diff;
-    const QString asterisks;
     const QRegExp normalFormat;
     const QRegExp contextFormat;
     const QRegExp rcsFormat;

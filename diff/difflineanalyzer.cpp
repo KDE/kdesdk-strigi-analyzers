@@ -37,8 +37,6 @@ using namespace Strigi;
 
 DiffLineAnalyzer::DiffLineAnalyzer(const DiffLineAnalyzerFactory* f)
     : factory(f),
-    eq3("==="), plus3("+++"), minus3("---"), asterisk3("***"), index("Index:"),
-    retrieving("retrieving revision"), diff("diff"), asterisks("***************"),
     normalFormat("^[0-9]+[0-9,]*[acd][0-9]+[0-9,]*$"), contextFormat("^\\*\\*\\* [^\\t]+\\t"),
     rcsFormat("^[acd][0-9]+ [0-9]+"), edFormat("^[0-9]+[0-9,]*[acd]"),
     edAdd( "([0-9]+)(|,([0-9]+))a" ), edDel( "([0-9]+)(|,([0-9]+))d" ),
@@ -75,40 +73,38 @@ void DiffLineAnalyzer::startAnalysis(AnalysisResult* i) {
 
 void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 
-    QString line(QString::fromUtf8(data, length));
+    QString line;
 
-    if( !indexFound && line.startsWith(index) ) 
+    if( !indexFound && length>6 && !strncmp(data,"Index:", 6) ) 
     {
-        QString fileName=line.mid(7);
+        QString fileName=QString::fromUtf8(data+7, length-7);
         analysisResult->addValue(factory->firstFileField, (const char*)fileName.toUtf8().data());
 	indexFound = true;
     }
-    else if ( diffProgram == DiffLineAnalyzer::Undeterminable && line.startsWith(retrieving) )
+    else if ( diffProgram == DiffLineAnalyzer::Undeterminable && length>18 && !strncmp(data, "retrieving revision", 19) )
 	diffProgram = DiffLineAnalyzer::CVSDiff;
-    else if ( diffProgram == DiffLineAnalyzer::Undeterminable && line[4]==' ' && line.startsWith(diff) )
+    else if ( diffProgram == DiffLineAnalyzer::Undeterminable && length>4 && !strncmp(data,"diff ", 5) )
         diffProgram = DiffLineAnalyzer::Diff;
-    else if ( diffProgram == DiffLineAnalyzer::Undeterminable && line.startsWith(eq3) && data[3]==' ' )
+    else if ( diffProgram == DiffLineAnalyzer::Undeterminable && length>3 && !strncmp(data,"=== ",4) )
         diffProgram = DiffLineAnalyzer::Perforce;
 
     bool digit0=data[0]>='0' && data[0]<='9';
     
-    if(diffFormat == DiffLineAnalyzer::Unknown) //search format
+    if(length>0 && diffFormat == DiffLineAnalyzer::Unknown) //search format
     {
+        if ( digit0 || data[0] == '*' || data[0]=='a' || data[0]=='c' || data[0]=='d')
+            line=QString::fromUtf8(data,length);
+            
         if ( digit0 && normalFormat.exactMatch( line ) )
         {
             diffFormat = DiffLineAnalyzer::Normal;
         }
-        else if ( line[3]==' ' && line.startsWith(minus3) ) 
-        {
-            // unified has first a '^--- ' line, then a '^+++ ' line
-            diffFormat = DiffLineAnalyzer::Unified;
-        }
-        else if ( line[0] == '*' && line.contains( contextFormat ) )
+        else if ( data[0] == '*' && line.contains( contextFormat ) )
         {
             // context has first a '^*** ' line, then a '^--- ' line
             diffFormat = DiffLineAnalyzer::Context;
         }
-        else if ( (line[0]=='a' || line[0]=='c' || line[0]=='d') &&  line.contains( rcsFormat ) )
+        else if ( (data[0]=='a' || data[0]=='c' || data[0]=='d') &&  line.contains( rcsFormat ) )
         {
             diffFormat =  DiffLineAnalyzer::RCS;
         }
@@ -116,41 +112,48 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
         {
             diffFormat = DiffLineAnalyzer::Ed;
         }
+        else if ( length>3  && !strncmp(data,"--- ", 4) ) 
+        {
+            // unified has first a '^--- ' line, then a '^+++ ' line
+            diffFormat = DiffLineAnalyzer::Unified;
+        }
     }
     
-    if (diffFormat != DiffLineAnalyzer::Unknown)
+    if (length>0 && diffFormat != DiffLineAnalyzer::Unknown)
     //analyze files
     {
+        if (line.isNull()) line=QString::fromUtf8(data, length);
+
 	switch( diffFormat )
 	{
 	case DiffLineAnalyzer::Context:
-		if ( line.startsWith(asterisks) )
+		if ( length>14 && !strncmp(data,"***************", 15) )
 		{
 			numberOfHunks++;
 			//kDebug(7034) << "Context Hunk      : " << line << endl;
 		}
-		else if ( line.startsWith(asterisk3) )
+		else if ( length>2 && !strncmp(data,"***", 3) )
 		{
 			numberOfFiles++;
 			//kDebug(7034) << "Context File      : " << line << endl;
 		}
-		else if ( line.startsWith(minus3) ) {} // ignore
-		else if ( line[0]=='+' )
+		else if ( length>2 && !strncmp(data, "---", 3) ) {} // ignore
+		else if ( data[0]=='+' )
 		{
 			numberOfAdditions++;
 //			kDebug(7034) << "Context Insertion : " << line << endl;
 		}
-		else if ( line[0]=='-' )
+		else if ( data[0]=='-' )
 		{
 			numberOfDeletions++;
 //			kDebug(7034) << "Context Deletion  : " << line << endl;
 		}
-		else if ( line[0]=='!' )
+		else if ( data[0]=='!' )
 		{
 			numberOfChanges++;
 //			kDebug(7034) << "Context Modified  : " << line << endl;
 		}
-		else if ( line[0]==' ' )
+		else if ( data[0]==' ' )
 		{
 //				kDebug(7034) << "Context Context   : " << line << endl;
 		}
@@ -164,7 +167,9 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 #endif
 		break;
 	case DiffLineAnalyzer::Ed:
-		if ( line.startsWith( diff ) )
+                if (line.isNull()) line=QString::fromUtf8(data, length);
+                
+		if ( length>3 && !strncmp(data,"diff", 4) )
 		{
 			numberOfFiles++;
 //			kDebug(7034) << "Ed File         : " << line << endl;
@@ -214,7 +219,9 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 
 		break;
 	case DiffLineAnalyzer::Normal:
-		if ( line.startsWith( diff ) )
+                if (line.isNull()) line=QString::fromUtf8(data, length);
+	
+		if ( length>3 && !strncmp(data,"diff", 4) )
 		{
 			numberOfFiles++;
 //			kDebug(7034) << "Normal File         : " << line << endl;
@@ -290,7 +297,9 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 		}
 		break;
 	case DiffLineAnalyzer::RCS:
-		if ( line.startsWith( diff ) ) // works for cvs diff, have to test for normal diff
+                if (line.isNull()) line=QString::fromUtf8(data, length);
+
+		if ( length>3 && !strncmp(data,"diff", 4) ) // works for cvs diff, have to test for normal diff
 		{
 //				kDebug(7034) << "RCS File      : " << line << endl;
 			numberOfFiles++;
@@ -315,28 +324,28 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
 		}
 		break;
 	case DiffLineAnalyzer::Unified:
-		if ( line[0]=='@' && line[1]=='@' && line[2]==' ' )
+		if ( data[0]=='@' && data[1]=='@' && data[2]==' ' )
 		{
 			numberOfHunks++;
 			//kDebug(7034) << "Unified Hunk      : " << line << endl;
 		}
-		else if ( line.startsWith(minus3) )
+		else if ( length>2 && !strncmp(data, "---", 3) )
 		{
 			numberOfFiles++;
 			//kDebug(7034) << "Unified File      : " << line << endl;
 		}
-		else if ( line.startsWith(plus3) ) {} // ignore (don't count as insertion)
-		else if ( line[0]=='+' )
+		else if ( length>2 && !strncmp(data, "+++", 3) ) {} // ignore (don't count as insertion)
+		else if ( data[0]=='+' )
 		{
 			numberOfAdditions++;
 			//kDebug(7034) << "Unified Insertion : " << line << endl;
 		}
-		else if ( line[0]=='-' )
+		else if ( data[0]=='-' )
 		{
 			numberOfDeletions++;
 			//kDebug(7034) << "Unified Deletion  : " << line << endl;
 		}
-		else if ( line[0]==' ' )
+		else if ( data[0]==' ' )
 		{
 			//kDebug(7034) << "Unified Context   : " << line << endl;
 		}
