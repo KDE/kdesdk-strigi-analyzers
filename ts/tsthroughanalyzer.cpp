@@ -1,5 +1,6 @@
 /* This file is part of the KDE project
  * Copyright (C) 2007 Montel Laurent <montel@kde.org>
+ * Copyright (C) 2008 Jakub Stachowski <qbast@go2.pl>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -18,115 +19,109 @@
  */
 
 #define STRIGI_IMPORT_API
-#include <strigi/streamthroughanalyzer.h>
+#include <strigi/streamsaxanalyzer.h>
 #include <strigi/analyzerplugin.h>
 #include <strigi/fieldtypes.h>
 #include <strigi/analysisresult.h>
-
-//kde include
-#include <KUrl>
-
-//qt include
-#include <QFile>
-#include <QTextStream>
-
+#include <string.h>
 
 using namespace std;
 using namespace Strigi;
 
-class TsThroughAnalyzerFactory;
-class TsThroughAnalyzer : public StreamThroughAnalyzer {
+class TsSaxAnalyzerFactory;
+class TsSaxAnalyzer : public StreamSaxAnalyzer {
     private:
-        const TsThroughAnalyzerFactory* factory;
+        enum FileType { Unknown, TS, Other };
+        
+        const TsSaxAnalyzerFactory* factory;
         AnalysisResult* idx;
+        FileType fileType;
+        int total;
+        int untranslated;
+        int obsolete;
+        
+        
         const char* name() const {
-	   return "TsThroughAnalyzer";
+	   return "TsSaxAnalyzer";
 	} 
-        void setIndexable( AnalysisResult *i ) {
+        void startAnalysis( AnalysisResult *i ) {
             idx = i;
+            fileType = Unknown;
+            total = 0;
+            untranslated = 0;
+            obsolete = 0;
         }
-        InputStream* connectInputStream( InputStream *in );
-        bool isReadyWithStream() { return true; }
+        bool isReadyWithStream() { return fileType == Other; }
+        virtual void endAnalysis(bool complete);
+        virtual void startElement(const char* localname, const char*, const char*, int, const char **, int nb_attributes,
+             int, const char **atributes);
+        
     public:
-        TsThroughAnalyzer( const TsThroughAnalyzerFactory* f ) : factory( f ) {}
+        TsSaxAnalyzer( const TsSaxAnalyzerFactory* f ) : factory( f ) {}
 };
 
-class TsThroughAnalyzerFactory : public StreamThroughAnalyzerFactory {
+class TsSaxAnalyzerFactory : public StreamSaxAnalyzerFactory {
 private:
     const char* name() const {
-        return "TsThroughAnalyzer";
+        return "TsSaxAnalyzer";
     }
-    StreamThroughAnalyzer* newInstance() const {
-        return new TsThroughAnalyzer(this);
+    StreamSaxAnalyzer* newInstance() const {
+        return new TsSaxAnalyzer(this);
     }
     void registerFields( FieldRegister& );
 
-    static const std::string messageFieldName;
+    static const std::string totalFieldName;
     static const std::string translatedFieldName;
     static const std::string untranslatedFieldName;
     static const std::string obsoleteFieldName;
 public:
-    const RegisteredField* messageField;
+    const RegisteredField* totalField;
     const RegisteredField* translatedField;
     const RegisteredField* untranslatedField;
     const RegisteredField* obsoleteField;
 };
 
-const std::string TsThroughAnalyzerFactory::messageFieldName( "message" );
-const std::string TsThroughAnalyzerFactory::translatedFieldName( "translated");
-const std::string TsThroughAnalyzerFactory::untranslatedFieldName( "untranslated");
-const std::string TsThroughAnalyzerFactory::obsoleteFieldName("obsolete");
+const std::string TsSaxAnalyzerFactory::totalFieldName( "translation.total" );
+const std::string TsSaxAnalyzerFactory::translatedFieldName( "translation.translated");
+const std::string TsSaxAnalyzerFactory::untranslatedFieldName( "translation.untranslated");
+const std::string TsSaxAnalyzerFactory::obsoleteFieldName("translation.obsolete");
 
-void TsThroughAnalyzerFactory::registerFields( FieldRegister& reg ) {
-	messageField = reg.registerField( messageFieldName, FieldRegister::integerType, 1, 0 );
+void TsSaxAnalyzerFactory::registerFields( FieldRegister& reg ) {
+	totalField = reg.registerField( totalFieldName, FieldRegister::integerType, 1, 0 );
 	translatedField = reg.registerField( translatedFieldName, FieldRegister::integerType, 1, 0 );
 	untranslatedField = reg.registerField(untranslatedFieldName, FieldRegister::integerType, 1, 0 );
 	obsoleteField = reg.registerField(obsoleteFieldName, FieldRegister::stringType, 1, 0 );
 }
 
-InputStream* TsThroughAnalyzer::connectInputStream( InputStream* in ) {
-    const string& path = idx->path();
-    QFile f(path.c_str());
-    if (!f.open(IO_ReadOnly))
-        return in;
+void TsSaxAnalyzer::startElement(const char* localname, const char*, const char*, int, const char **, int nb_attributes,
+     int, const char **attr)
+{
+    if (fileType == Unknown) 
+        fileType = strcmp(localname,"TS") ? Other : TS;
+    if (!strcmp(localname,"source")) total++;
+    if (!strcmp(localname,"translation")) 
+        for (int i=0;i<nb_attributes;i++) 
+            if (!strcmp(attr[i*5],"type")) {
+                if ((attr[i*5+4]-attr[i*5+3])==8 && !strncmp(attr[i*5+3],"obsolete",8)) obsolete++;
+                if ((attr[i*5+4]-attr[i*5+3])==10 && !strncmp(attr[i*5+3],"unfinished",10)) untranslated++;
+        }
+}
 
-    int messages      = 0;
-    int untranslated  = 0;
-    int obsolete      = 0;
-
-    QTextStream stream( &f );
-    QString line = stream.readLine();
-
-    // is it really a linguist file?
-    if (!line.contains("<!DOCTYPE TS>", false))
-        return in;
-
-    do 
-    {
-        line = stream.readLine();
-
-        if (line.contains("type=\"obsolete\"")) obsolete++;
-
-        if (line.contains("<source>")) messages++;
-
-        if (line.contains("type=\"unfinished\"")) untranslated++;
-
-    }
-    while (!line.isNull());
-
-    idx->addValue( factory->messageField,messages);
-    idx->addValue( factory->translatedField,(messages-untranslated-obsolete));
+void TsSaxAnalyzer::endAnalysis(bool complete)
+{
+    if ( !complete && fileType!=TS ) return;
+    idx->addValue( factory->totalField, total );
+    idx->addValue( factory->translatedField,(total-untranslated-obsolete));
     idx->addValue( factory->untranslatedField,untranslated);
     idx->addValue( factory->obsoleteField,obsolete);
-    return in;
 }
 
 class Factory : public AnalyzerFactoryFactory {
 public:
-    std::list<StreamThroughAnalyzerFactory*>
-    streamThroughAnalyzerFactories() const {
-        std::list<StreamThroughAnalyzerFactory*> af;
-        af.push_back(new TsThroughAnalyzerFactory());
+    std::list<StreamSaxAnalyzerFactory*>
+    streamSaxAnalyzerFactories() const {
+        std::list<StreamSaxAnalyzerFactory*> af;
+        af.push_back(new TsSaxAnalyzerFactory());
         return af;
     }
 };
