@@ -1,6 +1,7 @@
 /* This file is part of Strigi Desktop Search
  *
  * Copyright (C) 2007 Laurent Montel <montel@kde.org>
+ * Copyright (C) 2008 Jakub Stachowski <qbast@go2.pl>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -73,6 +74,7 @@ void DiffLineAnalyzer::startAnalysis(AnalysisResult* i) {
 }
 
 void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
+
     QString line(QString::fromUtf8(data, length));
 
     if( !indexFound && line.startsWith(index) ) 
@@ -81,11 +83,11 @@ void DiffLineAnalyzer::handleLine(const char* data, uint32_t length) {
         analysisResult->addValue(factory->firstFileField, (const char*)fileName.toUtf8().data());
 	indexFound = true;
     }
-    else if ( line.startsWith(retrieving) )
+    else if ( diffProgram == DiffLineAnalyzer::Undeterminable && line.startsWith(retrieving) )
 	diffProgram = DiffLineAnalyzer::CVSDiff;
-    else if ( line.startsWith(diff) && line[4]==' ' )
+    else if ( diffProgram == DiffLineAnalyzer::Undeterminable && line[4]==' ' && line.startsWith(diff) )
         diffProgram = DiffLineAnalyzer::Diff;
-    else if ( line.startsWith(eq3) && data[3]==' ' )
+    else if ( diffProgram == DiffLineAnalyzer::Undeterminable && line.startsWith(eq3) && data[3]==' ' )
         diffProgram = DiffLineAnalyzer::Perforce;
 
     bool digit0=data[0]>='0' && data[0]<='9';
