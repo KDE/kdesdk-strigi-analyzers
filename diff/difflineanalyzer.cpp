@@ -383,63 +383,31 @@ void DiffLineAnalyzer::endAnalysis(bool complete){
 
 const QString DiffLineAnalyzer::determineI18nedProgram( DiffLineAnalyzer::DiffProgram diffProgram ) const
 {
-    QString program;
-
     switch( diffProgram )
     {
-    case DiffLineAnalyzer::CVSDiff:
-        program = i18n( "CVSDiff" );
-        break;
-    case DiffLineAnalyzer::Diff:
-        program = i18n( "Diff" );
-        break;
-    case DiffLineAnalyzer::Diff3:
-        program = i18n( "Diff3" );
-        break;
-    case DiffLineAnalyzer::Perforce:
-        program = i18n( "Perforce" );
-        break;
-    case DiffLineAnalyzer::SubVersion:
-        program = i18n( "Subversion" );
-        break;
-    case DiffLineAnalyzer::Undeterminable:
-        program = i18n( "Unknown" );
-        break;
+    case DiffLineAnalyzer::CVSDiff:     return i18n( "CVSDiff" );
+    case DiffLineAnalyzer::Diff:        return i18n( "Diff" );
+    case DiffLineAnalyzer::Diff3:       return i18n( "Diff3" );
+    case DiffLineAnalyzer::Perforce:    return i18n( "Perforce" );
+    case DiffLineAnalyzer::SubVersion:  return i18n( "Subversion" );
+    case DiffLineAnalyzer::Undeterminable:return i18n( "Unknown" );
     }
-    return program;
 }
 
 
 const QString DiffLineAnalyzer::determineI18nedFormat( DiffLineAnalyzer::Format diffFormat ) const
 {
-    QString format;
     switch( diffFormat )
     {
-    case DiffLineAnalyzer::Context:
-        format = i18n( "Context" );
-        break;
-    case DiffLineAnalyzer::Ed:
-        format = i18n( "Ed" );
-        break;
-    case DiffLineAnalyzer::Normal:
-        format = i18n( "Normal" );
-        break;
-    case DiffLineAnalyzer::RCS:
-        format = i18n( "RCS" );
-        break;
-    case DiffLineAnalyzer::Unified:
-        format = i18n( "Unified" );
-        break;
-    case DiffLineAnalyzer::Empty:
-        format = i18n( "Not Available (file empty)" );
-        break;
-    case DiffLineAnalyzer::Unknown:
-        format = i18n( "Unknown" );
-        break;
-    case DiffLineAnalyzer::SideBySide:
-        format = i18n( "Side by Side" );
+    case DiffLineAnalyzer::Context:     return i18n( "Context" );
+    case DiffLineAnalyzer::Ed:          return i18n( "Ed" );
+    case DiffLineAnalyzer::Normal:      return i18n( "Normal" );
+    case DiffLineAnalyzer::RCS:         return i18n( "RCS" );
+    case DiffLineAnalyzer::Unified:     return i18n( "Unified" );
+    case DiffLineAnalyzer::Empty:       return i18n( "Not Available (file empty)" );
+    case DiffLineAnalyzer::Unknown:     return i18n( "Unknown" );
+    case DiffLineAnalyzer::SideBySide:  return i18n( "Side by Side" );
     }
-    return format;
 }
 
 
