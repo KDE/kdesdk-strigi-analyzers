@@ -109,7 +109,7 @@ void TsSaxAnalyzer::startElement(const char* localname, const char*, const char*
 
 void TsSaxAnalyzer::endAnalysis(bool complete)
 {
-    if ( !complete && fileType!=TS ) return;
+    if ( !complete || fileType!=TS ) return;
     idx->addValue( factory->totalField, total );
     idx->addValue( factory->translatedField,(total-untranslated-obsolete));
     idx->addValue( factory->untranslatedField,untranslated);
