@@ -134,7 +134,8 @@ PoLineAnalyzer::endMessage() {
 void
 PoLineAnalyzer::endAnalysis(bool complete) {
     // if analysis is complete and valid, there are more values to report
-    if ((state == MSGSTR || state == WHITESPACE) && complete) {
+    if ((state == MSGSTR || state == WHITESPACE || state == COMMENT)
+            && complete) {
         if (state == MSGSTR) {
             endMessage();
         }
@@ -166,7 +167,7 @@ PoLineAnalyzer::handleLine(const char* data, uint32_t length) {
         return;
     } else if (state == COMMENT) {
         if (length == 0) {
-            state = ERROR;
+            state = WHITESPACE;
         } else if (data[0] == '#') {
             handleComment(data, length);
         } else if (length > 7 && strncmp("msgctxt", data, 7) == 0) {
