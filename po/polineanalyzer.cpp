@@ -122,11 +122,9 @@ PoLineAnalyzer::startAnalysis(Strigi::AnalysisResult* r) {
 void
 PoLineAnalyzer::endMessage() {
     messages++;
-    if (isFuzzy) {
-        fuzzy++;
-    } else if (!isTranslated) {
-        untranslated++;
-    }
+    fuzzy+=isFuzzy;
+    untranslated+=(!isTranslated);
+
     isFuzzy = false;
     isTranslated = false;
     state = WHITESPACE;
@@ -139,7 +137,7 @@ PoLineAnalyzer::endAnalysis(bool complete) {
         if (state == MSGSTR) {
             endMessage();
         }
-        result->addValue(factory->messagesField, messages);
+        result->addValue(factory->messagesField, --messages);
         result->addValue(factory->translatedField, messages-untranslated-fuzzy);
         result->addValue(factory->untranslatedField, untranslated);
         result->addValue(factory->fuzzyField, fuzzy);
