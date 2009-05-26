@@ -137,8 +137,12 @@ PoLineAnalyzer::endAnalysis(bool complete) {
         if (state == MSGSTR) {
             endMessage();
         }
-        result->addValue(factory->messagesField, --messages);
-        result->addValue(factory->translatedField, messages-untranslated-fuzzy);
+        int translated=--messages-untranslated-fuzzy;
+        if (translated==-1 && fuzzy==1)
+            translated=fuzzy=0;
+            
+        result->addValue(factory->messagesField, messages);
+        result->addValue(factory->translatedField, translated);
         result->addValue(factory->untranslatedField, untranslated);
         result->addValue(factory->fuzzyField, fuzzy);
     }
