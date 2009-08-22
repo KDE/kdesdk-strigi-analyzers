@@ -29,6 +29,7 @@
 #include "config-strigi.h"
 #include <cstring>
 
+#undef ERROR
 class PoLineAnalyzerFactory;
 class PoLineAnalyzer : public Strigi::StreamLineAnalyzer {
 public:
