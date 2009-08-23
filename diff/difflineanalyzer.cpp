@@ -392,6 +392,7 @@ const QString DiffLineAnalyzer::determineI18nedProgram( DiffLineAnalyzer::DiffPr
     case DiffLineAnalyzer::SubVersion:  return i18n( "Subversion" );
     case DiffLineAnalyzer::Undeterminable:return i18n( "Unknown" );
     }
+    return i18n( "Unknown" );
 }
 
 
@@ -408,6 +409,7 @@ const QString DiffLineAnalyzer::determineI18nedFormat( DiffLineAnalyzer::Format 
     case DiffLineAnalyzer::Unknown:     return i18n( "Unknown" );
     case DiffLineAnalyzer::SideBySide:  return i18n( "Side by Side" );
     }
+    return i18n( "Unknown" );
 }
 
 
