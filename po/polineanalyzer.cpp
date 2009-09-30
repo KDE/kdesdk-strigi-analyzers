@@ -29,6 +29,10 @@
 #include "config-strigi.h"
 #include <cstring>
 
+#ifdef _WIN32
+#undef ERROR
+#endif
+
 class PoLineAnalyzerFactory;
 class PoLineAnalyzer : public Strigi::StreamLineAnalyzer {
 public:
