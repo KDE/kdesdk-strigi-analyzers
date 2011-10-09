@@ -28,6 +28,7 @@
 #include <strigi/analysisresult.h>
 #include "config-strigi.h"
 #include <cstring>
+#include <iostream>
 
 #undef ERROR
 class PoLineAnalyzerFactory;
@@ -159,16 +160,23 @@ PoLineAnalyzer::handleComment(const char* data, uint32_t length) {
 }
 void
 PoLineAnalyzer::handleLine(const char* data, uint32_t length) {
+#if 0    
+    std::cout<<"state "<<state<<", line: ";
+    for (int i=0;i<length;i++)
+        std::cout<<data[i];
+    std::cout<<std::endl;
+#endif
     if (state == ERROR) return;
     if (state == WHITESPACE) {
         if (length == 0) return;
         if (data[0] != '#') {
-            state = ERROR;
+            state = COMMENT; //this allows PO files w/o comments
+        } else {
+            handleComment(data, length);
             return;
         }
-        handleComment(data, length);
-        return;
-    } else if (state == COMMENT) {
+    }
+    if (state == COMMENT) {
         if (length == 0) {
             state = WHITESPACE;
         } else if (data[0] == '#') {
@@ -196,8 +204,16 @@ PoLineAnalyzer::handleLine(const char* data, uint32_t length) {
             && length > 8 && strncmp("msgstr", data, 6) == 0) {
         state = MSGSTR;
         isTranslated = strncmp(data+length-3, " \"\"", 3) != 0;
-    } else if (state == MSGSTR && length == 0) {
-        endMessage();
+    } else if (state == MSGSTR) {
+        if (length == 0) {
+            endMessage();
+        } else if (data[0]=='#' || data[0]=='m') { //allow PO without empty line between entries
+            endMessage();
+            state = COMMENT;
+            handleLine(data, length);
+        } else {
+            state = ERROR;
+        }
     } else {
         state = ERROR;
     }
