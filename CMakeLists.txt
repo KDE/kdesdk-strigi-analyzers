@@ -9,5 +9,5 @@ find_package(Strigi REQUIRED)
 
 add_subdirectory( diff )
 add_subdirectory( ts )
-add_subdirectory( po )
+add_subdirectory( strigi_po )
 add_subdirectory( xlf )
